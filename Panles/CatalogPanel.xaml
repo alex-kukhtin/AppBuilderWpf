@@ -7,6 +7,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
-    </Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<TextBlock Grid.Row="0">CATALOG PANEL</TextBlock>
+		<TextBox Grid.Row="1" Text="{Binding Name,Mode=TwoWay}" FontWeight="Bold"/>
+	</Grid>
 </UserControl>

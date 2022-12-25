@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace AppBuilder;
 /// </summary>
 public partial class MainWindow : Window
 {
+	private AppNode? _appNode;
 	public MainWindow()
 	{
 		InitializeComponent();
@@ -39,9 +41,22 @@ public partial class MainWindow : Window
 		if (res.HasValue && res.Value)
 		{
 			var json = File.ReadAllText(of.FileName);
-			var node = JsonConvert.DeserializeObject<AppNode>(json, JsonHelpers.DefaultSettings);
-
-			int z = 55;
+			_appNode = JsonConvert.DeserializeObject<AppNode>(json, JsonHelpers.DefaultSettings);
+			if (_appNode == null)
+				return;
+			this.DataContext = new ObservableCollection<BaseNode>() {
+				_appNode
+			};
 		}
+	}
+
+	private void Test_Executed(object sender, ExecutedRoutedEventArgs e)
+	{
+		if (_appNode == null)
+			return;
+		_appNode.Tables.Add(new TableNode()
+		{
+			Name = "NewTable"
+		});
 	}
 }

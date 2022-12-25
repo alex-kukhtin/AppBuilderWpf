@@ -6,8 +6,14 @@
         xmlns:local="clr-namespace:AppBuilder"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+	<Window.Resources>
+		<ResourceDictionary>
+			<local:ObjectToPanelConverter x:Key="ObjectToPanelConverter" />
+		</ResourceDictionary>
+	</Window.Resources>
 	<Window.CommandBindings>
 		<CommandBinding Command="ApplicationCommands.Open" Executed="Open_Executed"/>
+		<CommandBinding Command="ApplicationCommands.Help" Executed="Test_Executed"/>
 	</Window.CommandBindings>
     <Grid>
 		<Grid.ColumnDefinitions>
@@ -24,10 +30,20 @@
 					  HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
 		<ToolBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
 			<Button Content="Open" Command="ApplicationCommands.Open"/>
-			<Button Content="Generate" />
+			<Button Content="Generate" Command="ApplicationCommands.Help"/>
 		</ToolBar>
 		<TreeView x:Name="TreeView" Grid.Row="1" Grid.Column="0"
 				  HorizontalAlignment="Stretch" ItemsSource="{Binding}">
+			<TreeView.ContextMenu>
+				<ContextMenu>
+					<MenuItem Header="Add">
+						<MenuItem Header="Table"/>
+						<Separator />
+						<MenuItem Header="Catalog"/>
+						<MenuItem Header="Document"/>
+					</MenuItem>
+				</ContextMenu>
+			</TreeView.ContextMenu>
 			<TreeView.ItemContainerStyle>
 				<Style TargetType="{x:Type TreeViewItem}">
 					<Setter Property="IsExpanded" Value="True"/>
@@ -35,9 +51,19 @@
 			</TreeView.ItemContainerStyle>
 			<TreeView.ItemTemplate>
 				<HierarchicalDataTemplate ItemsSource="{Binding Children}">
-					<TextBlock Text="{Binding DisplayName}"/>
+					<TextBlock Text="{Binding Name}"/>
 				</HierarchicalDataTemplate>
 			</TreeView.ItemTemplate>
 		</TreeView>
+		<ContentControl Grid.Row="1" Grid.Column="2" Padding="6"
+			Content="{Binding ElementName=TreeView, Path=SelectedItem, 
+				Converter={StaticResource ObjectToPanelConverter}}">
+		</ContentControl>
+
+		<StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+			<StatusBarItem>
+				<TextBlock Text="{Binding Name}"/>
+			</StatusBarItem>
+		</StatusBar>
 	</Grid>
 </Window>
