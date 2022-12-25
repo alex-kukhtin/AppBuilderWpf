@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -20,4 +21,6 @@ public class TablesNode : BaseNode
 
 public class TableNode : BaseNode
 {
+	[JsonProperty(Order = 1)]
+	public ObservableCollection<FieldNode> Fields { get; set; } = new();
 }

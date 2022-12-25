@@ -16,6 +16,7 @@ public class ObjectToPanelConverter : IValueConverter
 	{
 		return value switch
 		{
+			AppNode appNode => new AppPanel(appNode),
 			TableNode tableNode => new TablePanel(tableNode),
 			CatalogNode catalogNode => new CatalogPanel(catalogNode),
 			_ => null,

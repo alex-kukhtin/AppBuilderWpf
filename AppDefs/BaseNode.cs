@@ -1,17 +1,45 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Newtonsoft.Json;
 namespace AppBuilder;
 
-public class BaseNode
+public class BaseNode : INotifyPropertyChanged
 {
-	public String? Name { get; set; }
+	private String? _name;
+
+	[JsonProperty(Order = -5)]
+	public String? Name { get => _name; set { _name = value; OnPropertyChanged(); } }
+
+	[JsonProperty(Order = -4)]
+	public String? Description { get; set; }
 
 	[JsonIgnore]
 	public virtual IEnumerable<BaseNode>? Children => null;
+
+	[JsonIgnore]
+	public Boolean IsExpanded => true;
+
+	private Boolean _isSelected;
+	[JsonIgnore]
+	public Boolean IsSelected { 
+		get {
+			return _isSelected;
+		}
+		set {
+			if (_isSelected == value)
+				return;
+			_isSelected = value; 
+			OnPropertyChanged();
+		}
+	}
+
+	public event PropertyChangedEventHandler? PropertyChanged;
+
+	public void OnPropertyChanged([CallerMemberName] String prop = "")
+	{
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+	}
 }

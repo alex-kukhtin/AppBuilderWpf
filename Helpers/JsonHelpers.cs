@@ -16,6 +16,8 @@ public static class JsonHelpers
 			ContractResolver = new DefaultContractResolver()
 			{
 				NamingStrategy = new CamelCaseNamingStrategy()
-			}
+			},
+			NullValueHandling = NullValueHandling.Ignore,
+			DefaultValueHandling = DefaultValueHandling.Ignore,
 		};
 }

@@ -11,10 +11,6 @@
 			<local:ObjectToPanelConverter x:Key="ObjectToPanelConverter" />
 		</ResourceDictionary>
 	</Window.Resources>
-	<Window.CommandBindings>
-		<CommandBinding Command="ApplicationCommands.Open" Executed="Open_Executed"/>
-		<CommandBinding Command="ApplicationCommands.Help" Executed="Test_Executed"/>
-	</Window.CommandBindings>
     <Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="1*"/>
@@ -29,24 +25,25 @@
 		<GridSplitter Width="5" Grid.Column="1" Grid.Row="1" 
 					  HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
 		<ToolBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-			<Button Content="Open" Command="ApplicationCommands.Open"/>
-			<Button Content="Generate" Command="ApplicationCommands.Help"/>
+			<Button Content="Open" Command="{Binding OpenCommand}"/>
+			<Button Content="Generate" Command="{Binding GenerateCommand}"/>
 		</ToolBar>
 		<TreeView x:Name="TreeView" Grid.Row="1" Grid.Column="0"
-				  HorizontalAlignment="Stretch" ItemsSource="{Binding}">
+				  HorizontalAlignment="Stretch" ItemsSource="{Binding Root}">
 			<TreeView.ContextMenu>
 				<ContextMenu>
 					<MenuItem Header="Add">
-						<MenuItem Header="Table"/>
+						<MenuItem Header="Table" Command="{Binding AddCommand}" CommandParameter="Table"/>
 						<Separator />
-						<MenuItem Header="Catalog"/>
-						<MenuItem Header="Document"/>
+						<MenuItem Header="Catalog" Command="{Binding AddCommand}" CommandParameter="Catalog" />
+						<MenuItem Header="Document" Command="{Binding AddCommand}" CommandParameter="Document" />
 					</MenuItem>
 				</ContextMenu>
 			</TreeView.ContextMenu>
 			<TreeView.ItemContainerStyle>
 				<Style TargetType="{x:Type TreeViewItem}">
-					<Setter Property="IsExpanded" Value="True"/>
+					<Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
+					<Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
 				</Style>
 			</TreeView.ItemContainerStyle>
 			<TreeView.ItemTemplate>
@@ -55,6 +52,7 @@
 				</HierarchicalDataTemplate>
 			</TreeView.ItemTemplate>
 		</TreeView>
+		
 		<ContentControl Grid.Row="1" Grid.Column="2" Padding="6"
 			Content="{Binding ElementName=TreeView, Path=SelectedItem, 
 				Converter={StaticResource ObjectToPanelConverter}}">
