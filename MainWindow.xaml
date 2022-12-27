@@ -47,9 +47,9 @@
 		<GridSplitter Width="5" Grid.Column="1" Grid.Row="1" 
 					  HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
 		<ToolBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-			<Button Content="New" />
+			<Button Content="New" Command="{Binding NewCommand}"/>
 			<Button Content="Open" Command="{Binding OpenCommand}"/>
-			<Button ToolTip="Save solution file">
+			<Button ToolTip="Save solution file" Command="{Binding SaveCommand}">
 				<StackPanel Orientation="Horizontal">
 					<Image Source="/Images/Save.png" Margin="2"/>
 					<TextBlock Margin="2">Save</TextBlock>

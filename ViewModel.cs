@@ -21,7 +21,7 @@ public class ViewModel : INotifyPropertyChanged
 
 	public ObservableCollection<AppNode> Root { get; } = new ObservableCollection<AppNode>();
 
-	public String SolutionPath { get; private set; } = String.Empty;
+	public String SolutionFileName { get; set; } = String.Empty;
 
 	public event PropertyChangedEventHandler? PropertyChanged;
 	public void OnPropertyChanged([CallerMemberName] String prop = "")
@@ -36,7 +36,7 @@ public class ViewModel : INotifyPropertyChanged
 			_appNode = node;
 		Root.Add(_appNode);
 		_appNode.IsSelected = true;
-		SolutionPath = Path.GetDirectoryName(fileName) ?? String.Empty;
+		SolutionFileName = fileName;
 		OnPropertyChanged(String.Empty);
 	}
 
@@ -61,6 +61,7 @@ public class ViewModel : INotifyPropertyChanged
 	}
 
 	AddDetailsCommand? _addDetailCommand;
+	public ICommand NewCommand => new NewCommand(this);
 	public ICommand OpenCommand => new OpenCommand(this);
 	public ICommand GenerateCommand => new GenerateCommand(this);
 	public ICommand AddCommand => new AddCommand(this);

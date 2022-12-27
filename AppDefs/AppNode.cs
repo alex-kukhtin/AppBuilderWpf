@@ -7,13 +7,20 @@ using Newtonsoft.Json;
 
 namespace AppBuilder;
 
+public enum IdentifierType
+{
+	BigInt,
+	Integer,
+	Guid
+}
+
 public class AppNode : BaseNode
 {
 	[JsonProperty(Order = 1)]
 	public Boolean MultiTenant { get; set; }
 
 	[JsonProperty(Order = 2)]
-	public String DefaultSchema { get; set; } = String.Empty;
+	public IdentifierType IdentifierType { get; set; }
 
 	[JsonProperty(Order = 11)]
 	public ObservableCollection<CatalogNode> Catalogs { get; init; } = new();

@@ -11,4 +11,4 @@
 15. FieldType Changing -> Reset RefTable, Length
 16. Rename RefTable to Reference
 18. Field reorder commands
-19. 
+19. Save: Skip empty arrays

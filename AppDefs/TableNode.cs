@@ -25,6 +25,8 @@ public class TableNode : BaseNode
 	[JsonProperty(Order = 3)]
 	public ObservableCollection<TableNode> Details { get; set; } = new();
 
+	public Boolean ShouldSerializeDetails() => Details != null && Details.Count > 0;
+
 	[JsonIgnore]
 	public override String Image => "/Images/table.png";
 

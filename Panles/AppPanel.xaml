@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:AppBuilder"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-	<Grid Background="#FAFAFA">
+	<Grid Background="#FAFAFA" ShowGridLines="False">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition Width="300"/>
@@ -21,17 +21,18 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<Label Grid.Row="0" Grid.Column="0">Name</Label>
-		<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Margin="5"/>
+		<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Margin="3" Padding="3"/>
 
 		<Label Grid.Row="1" Grid.Column="0">Identitifier Type</Label>
-		<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DefaultSchema}" 
-				 Margin="5" Width="100" HorizontalAlignment="Left"/>
+		<ComboBox Grid.Row="1" Grid.Column="1" Width="100"
+				ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:IdentifierType}}}"
+				SelectedValue="{Binding IdentifierType}" Margin="3" Padding="6,3" HorizontalAlignment="Left"/>
 
 		<Label Grid.Row="2" Grid.Column="0">MultiTenant</Label>
-		<CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding MultiTenant}" Margin="5"/>
+		<CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding MultiTenant}" Margin="3"/>
 		
 		<Label Grid.Row="3" Grid.Column="0">Description</Label>
-		<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Description}" Margin="5"
+		<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Description}" Margin="3" Padding="3"
 			TextWrapping="Wrap" AcceptsReturn="True" Height="75" VerticalScrollBarVisibility="Visible"/>
 	</Grid>
 </UserControl>
