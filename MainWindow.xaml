@@ -5,17 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AppBuilder"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="768" Width="1280"
+		ResizeMode="CanResizeWithGrip">
 	<Window.Resources>
 		<ResourceDictionary>
 			<local:ObjectToPanelConverter x:Key="ObjectToPanelConverter" />
+			<ContextMenu x:Key="TreeMenu">
+				<MenuItem Header="Add">
+					<MenuItem Header="Catalog" Command="{Binding AddCommand}" CommandParameter="Catalog">
+						<MenuItem.Icon>
+							<Image Source="/Images/Catalog.png"/>
+						</MenuItem.Icon>
+					</MenuItem>
+					<MenuItem Header="Document" Command="{Binding AddCommand}" CommandParameter="Document">
+						<MenuItem.Icon>
+							<Image Source="/Images/Document.png"/>
+						</MenuItem.Icon>
+					</MenuItem>
+					<Separator />
+					<MenuItem Header="Details"
+							  Command="{Binding AddDetailsCommand}">
+						<MenuItem.Icon>
+							<Image Source="/Images/Table.png"/>
+						</MenuItem.Icon>
+					</MenuItem>
+				</MenuItem>
+			</ContextMenu>
 		</ResourceDictionary>
 	</Window.Resources>
-    <Grid>
+	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="1*"/>
+			<ColumnDefinition Width="300"/>
 			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -25,21 +47,27 @@
 		<GridSplitter Width="5" Grid.Column="1" Grid.Row="1" 
 					  HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
 		<ToolBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+			<Button Content="New" />
 			<Button Content="Open" Command="{Binding OpenCommand}"/>
+			<Button ToolTip="Save solution file">
+				<StackPanel Orientation="Horizontal">
+					<Image Source="/Images/Save.png" Margin="2"/>
+					<TextBlock Margin="2">Save</TextBlock>
+				</StackPanel>
+			</Button>
+			<Separator />
 			<Button Content="Generate" Command="{Binding GenerateCommand}"/>
 		</ToolBar>
 		<TreeView x:Name="TreeView" Grid.Row="1" Grid.Column="0"
-				  HorizontalAlignment="Stretch" ItemsSource="{Binding Root}">
-			<TreeView.ContextMenu>
-				<ContextMenu>
-					<MenuItem Header="Add">
-						<MenuItem Header="Table" Command="{Binding AddCommand}" CommandParameter="Table"/>
-						<Separator />
-						<MenuItem Header="Catalog" Command="{Binding AddCommand}" CommandParameter="Catalog" />
-						<MenuItem Header="Document" Command="{Binding AddCommand}" CommandParameter="Document" />
-					</MenuItem>
-				</ContextMenu>
-			</TreeView.ContextMenu>
+				  HorizontalAlignment="Stretch" ItemsSource="{Binding Root}"
+				  ContextMenu="{StaticResource TreeMenu}"
+				  SelectedItemChanged="TreeView_SelectedItemChanged">
+			<TreeView.Resources>
+				<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"
+                      Color="#B2D8FE" />
+				<SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"
+                      Color="Black" />
+			</TreeView.Resources>
 			<TreeView.ItemContainerStyle>
 				<Style TargetType="{x:Type TreeViewItem}">
 					<Setter Property="IsExpanded" Value="{Binding IsExpanded}"/>
@@ -48,19 +76,28 @@
 			</TreeView.ItemContainerStyle>
 			<TreeView.ItemTemplate>
 				<HierarchicalDataTemplate ItemsSource="{Binding Children}">
-					<TextBlock Text="{Binding Name}"/>
+					<StackPanel Orientation="Horizontal">
+						<Image Source="{Binding Image}" Margin="2"/>
+						<TextBlock Text="{Binding Name}" Margin="2"/>
+					</StackPanel>
 				</HierarchicalDataTemplate>
 			</TreeView.ItemTemplate>
 		</TreeView>
-		
-		<ContentControl Grid.Row="1" Grid.Column="2" Padding="6"
-			Content="{Binding ElementName=TreeView, Path=SelectedItem, 
-				Converter={StaticResource ObjectToPanelConverter}}">
-		</ContentControl>
+
+		<StackPanel Grid.Row="1" Grid.Column="2" Background="#FAFAFA">
+			<ContentControl Margin="6">
+				<ContentControl.Content>
+					<MultiBinding Converter="{StaticResource ObjectToPanelConverter}">
+						<Binding ElementName="TreeView" Path="SelectedItem" />
+						<Binding />
+					</MultiBinding>
+				</ContentControl.Content>									
+			</ContentControl>
+		</StackPanel>
 
 		<StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
 			<StatusBarItem>
-				<TextBlock Text="{Binding Name}"/>
+				<TextBlock Text="{Binding SelectedItem.Name}"/>
 			</StatusBarItem>
 		</StatusBar>
 	</Grid>

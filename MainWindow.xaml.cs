@@ -24,10 +24,15 @@ namespace AppBuilder;
 /// </summary>
 public partial class MainWindow : Window
 {
-	private readonly ViewModel viewModel = new();
+	private readonly ViewModel _viewModel = new();
 	public MainWindow()
 	{
 		InitializeComponent();
-		this.DataContext = viewModel;
+		DataContext= _viewModel;	
+	}
+
+	private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+	{
+		_viewModel.SelectedItem = e.NewValue;
 	}
 }

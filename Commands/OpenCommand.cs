@@ -20,6 +20,12 @@ public class OpenCommand : ICommand
 	}
 
 	public event EventHandler? CanExecuteChanged;
+
+	public void OnCanExecuteChanged()
+	{
+		CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+	}
+
 	public bool CanExecute(object? parameter) => true;
 
 	public void Execute(object? parameter)
@@ -34,7 +40,9 @@ public class OpenCommand : ICommand
 		{
 			var json = File.ReadAllText(of.FileName);
 			var appNode = JsonConvert.DeserializeObject<AppNode>(json, JsonHelpers.DefaultSettings);
-			_viewModel.SetContext(appNode, of.FileName);
+			if (appNode == null)
+				throw new InvalidOperationException("Invalid solution file");
+			_viewModel.Open(appNode, of.FileName);
 		}
 	}
 }

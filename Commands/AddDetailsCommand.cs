@@ -4,10 +4,10 @@ using System.Windows.Input;
 
 namespace AppBuilder;
 
-public class AddCommand : ICommand
+public class AddDetailsCommand : ICommand
 {
 	private readonly ViewModel _viewModel;
-	public AddCommand(ViewModel viewModel)
+	public AddDetailsCommand(ViewModel viewModel)
 	{
 		_viewModel = viewModel;
 	}
@@ -18,19 +18,16 @@ public class AddCommand : ICommand
 		CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 	}
 
-	public bool CanExecute(object? parameter) => _viewModel.Root.Count > 0;
+	public bool CanExecute(object? parameter)
+	{
+		return (_viewModel?.SelectedItem as TableNode) != null;
+	}
 
 	public void Execute(object? parameter)
 	{
-		var root = _viewModel.Root[0];
-		switch (parameter?.ToString())
-		{
-			case "Catalog":
-				root.AddCatalog();
-				break;
-			case "Document":
-				root.AddDocument();
-				break;
-		}
+		var selTable = _viewModel.SelectedItem as TableNode;
+		if (selTable == null) 
+			return;
+		selTable.AddDetails();
 	}
 }

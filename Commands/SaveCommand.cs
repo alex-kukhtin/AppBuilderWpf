@@ -6,10 +6,10 @@ using Newtonsoft.Json;
 
 namespace AppBuilder;
 
-public class GenerateCommand : ICommand
+public class SaveCommand : ICommand
 {
 	private readonly ViewModel _viewModel;
-	public GenerateCommand(ViewModel viewModel)
+	public SaveCommand(ViewModel viewModel)
 	{
 		_viewModel = viewModel;
 	}
@@ -20,14 +20,15 @@ public class GenerateCommand : ICommand
 	{
 		CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 	}
-	public bool CanExecute(object? parameter) => _viewModel.Root.Count > 0;
+
+	public bool CanExecute(object? parameter) => true;
 
 	public void Execute(object? parameter)
 	{
-		if (!CanExecute(parameter))
-			return;
 		var node = _viewModel.Root[0];
-		// ensure saved
-		_viewModel.SaveCommand.Execute(parameter);
+		var json = JsonConvert.SerializeObject(node, Formatting.Indented, JsonHelpers.DefaultSettings);
+
+		var path = Path.Combine("C:/Temp", "result.json");
+		File.WriteAllText(path, json);
 	}
 }

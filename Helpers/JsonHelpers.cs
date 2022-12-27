@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
-using System;
+﻿
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace AppBuilder;
 
@@ -19,5 +18,8 @@ public static class JsonHelpers
 			},
 			NullValueHandling = NullValueHandling.Ignore,
 			DefaultValueHandling = DefaultValueHandling.Ignore,
+			Converters = new List<JsonConverter>() { 
+				new StringEnumConverter()
+			}
 		};
 }

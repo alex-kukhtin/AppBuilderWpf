@@ -20,10 +20,31 @@ namespace AppBuilder;
 /// </summary>
 public partial class TablePanel : UserControl
 {
-	public TablePanel(TableNode table)
+	private readonly TableNode _table;
+	private readonly ViewModel _vm;
+	public TablePanel(TableNode table, ViewModel vm)
 	{
+		_table = table;
+		_vm = vm;
 		InitializeComponent();
 		this.DataContext = table;
+	}
+
+	public IEnumerable<String> RefTables => _vm.RefTables;
+
+	private void AddField_Click(object sender, RoutedEventArgs e)
+	{
+		_table.CreateField();
+    }
+
+	private void DeleteField_Click(object sender, RoutedEventArgs e)
+	{
+		if (e.Source is not Button btnObj)
+			return;
+		_table.Fields.First(x => x == btnObj.CommandParameter);
+		if (btnObj.CommandParameter is not FieldNode fn)
+			return;
+		_table.Fields.Remove(fn);
 	}
 }
 

@@ -1,9 +1,11 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+
 using Newtonsoft.Json;
+
 namespace AppBuilder;
 
 public class BaseNode : INotifyPropertyChanged
@@ -11,16 +13,25 @@ public class BaseNode : INotifyPropertyChanged
 	private String? _name;
 
 	[JsonProperty(Order = -5)]
-	public String? Name { get => _name; set { _name = value; OnPropertyChanged(); } }
+	public String? Name { 
+		get => _name; 
+		set { 
+			_name = value; 
+			OnPropertyChanged();
+		} 
+	}
 
 	[JsonProperty(Order = -4)]
+	public String? Title { get; set; }
+
+	[JsonProperty(Order = -3)]
 	public String? Description { get; set; }
 
 	[JsonIgnore]
 	public virtual IEnumerable<BaseNode>? Children => null;
 
 	[JsonIgnore]
-	public Boolean IsExpanded => true;
+	public static Boolean IsExpanded => true;
 
 	private Boolean _isSelected;
 	[JsonIgnore]
@@ -31,7 +42,7 @@ public class BaseNode : INotifyPropertyChanged
 		set {
 			if (_isSelected == value)
 				return;
-			_isSelected = value; 
+			_isSelected = value;
 			OnPropertyChanged();
 		}
 	}
@@ -42,4 +53,7 @@ public class BaseNode : INotifyPropertyChanged
 	{
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 	}
+
+	[JsonIgnore]
+	public virtual String Image => "/Images/FolderClosed.png";
 }

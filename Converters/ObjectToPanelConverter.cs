@@ -7,23 +7,26 @@ using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Automation.Provider;
 
 namespace AppBuilder;
 
-public class ObjectToPanelConverter : IValueConverter
+public class ObjectToPanelConverter : IMultiValueConverter
 {
-	public Object? Convert(Object? value, Type targetType, Object? parameter, CultureInfo culture)
+	public Object? Convert(Object[] values, Type targetType, Object parameter, CultureInfo culture)
 	{
-		return value switch
+		var vm = values[1] as ViewModel ?? throw new InvalidOperationException("Invalid Converter parameter");
+		return values[0] switch
 		{
 			AppNode appNode => new AppPanel(appNode),
-			TableNode tableNode => new TablePanel(tableNode),
-			CatalogNode catalogNode => new CatalogPanel(catalogNode),
+			CatalogNode catalogNode => new TablePanel(catalogNode, vm),
+			DocumentNode documentNode => new TablePanel(documentNode, vm),
+			TableNode tableNode => new TablePanel(tableNode, vm),
 			_ => null,
 		}; ;
 	}
 
-	public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+	public Object[] ConvertBack(Object value, Type[] targetTypes, object parameter, CultureInfo culture)
 	{
 		throw new NotImplementedException();
 	}

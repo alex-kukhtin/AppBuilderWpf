@@ -9,7 +9,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\AppNode.png" />
+    <None Remove="Images\Catalog.png" />
+    <None Remove="Images\Document.png" />
+    <None Remove="Images\FolderClosed.png" />
+    <None Remove="Images\Table.png" />
+    <None Remove="Save.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Document.png" />
+    <Resource Include="Images\Catalog.png" />
+    <Resource Include="Images\AppNode.png" />
+    <Resource Include="Images\Save.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\FolderClosed.png" />
+    <Resource Include="Images\Table.png" />
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,9 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Newtonsoft.Json;
 
 namespace AppBuilder;
 
@@ -18,6 +18,19 @@ public class DocumentsNode : BaseNode
 	public override IEnumerable<BaseNode>? Children => _documents;
 
 }
-public class DocumentNode : BaseNode
+public class DocumentNode : TableNode
 {
+	[JsonIgnore]
+	public override String Image => "/Images/Document.png";
+	[JsonIgnore]
+	public override String NameWithSchema => $"Document.{Name}";
+
+	public void ApplyDefaults()
+	{
+		AddField(true, "Id", FieldType.Identifier);
+		AddField(true, "Void", FieldType.Boolean);
+		AddField(false, "Date", FieldType.Date, "@[Date]");
+		AddField(false, "No", FieldType.String, "@[Number]", 50);
+		AddField(false, "Memo", FieldType.String, "@[Memo]", 255);
+	}
 }
