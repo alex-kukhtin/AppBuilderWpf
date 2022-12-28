@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Input;
-
+using AppGenerator;
 using Newtonsoft.Json;
 
 namespace AppBuilder;
@@ -26,6 +26,8 @@ public class GenerateCommand : ICommand
 	{
 		if (!CanExecute(parameter))
 			return;
+		var gen = new ApplicationGenerator(_viewModel.SolutionFileName);
+		gen.GenerateAppliction();
 		var node = _viewModel.Root[0];
 		// ensure saved
 		_viewModel.SaveCommand.Execute(parameter);

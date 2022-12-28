@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AppGenerator\**" />
+    <EmbeddedResource Remove="AppGenerator\**" />
+    <None Remove="AppGenerator\**" />
+    <Page Remove="AppGenerator\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Images\AppNode.png" />
     <None Remove="Images\Catalog.png" />
     <None Remove="Images\Document.png" />
@@ -19,6 +26,10 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppGenerator\AppGenerator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

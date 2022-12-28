@@ -1,0 +1,157 @@
+{
+  "name": "TestApp",
+  "catalogs": [
+    {
+      "name": "Unit",
+      "fields": [
+        {
+          "name": "Id",
+          "system": true,
+          "type": "Identifier"
+        },
+        {
+          "name": "Void",
+          "system": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "Name",
+          "title": "@[Name]",
+          "length": 255
+        },
+        {
+          "name": "Memo",
+          "title": "@[Memo]",
+          "length": 255
+        }
+      ]
+    },
+    {
+      "name": "Product",
+      "fields": [
+        {
+          "name": "Id",
+          "system": true,
+          "type": "Identifier"
+        },
+        {
+          "name": "Void",
+          "system": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "Name",
+          "title": "@[Name]",
+          "length": 255
+        },
+        {
+          "name": "Memo",
+          "title": "@[Memo]",
+          "length": 255
+        },
+        {
+          "name": "Unit",
+          "title": "@[Unit]",
+          "length": 50,
+          "type": "Reference",
+          "refTable": "Catalog.Unit"
+        },
+        {
+          "name": "SKU",
+          "length": 50
+        }
+      ]
+    },
+    {
+      "name": "Agent",
+      "fields": [
+        {
+          "name": "Id",
+          "system": true,
+          "type": "Identifier"
+        },
+        {
+          "name": "Void",
+          "system": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "Name",
+          "title": "@[Name]",
+          "length": 255
+        },
+        {
+          "name": "Memo",
+          "title": "@[Memo]",
+          "length": 255
+        },
+        {
+          "name": "Code",
+          "title": "@[Code]",
+          "length": 50
+        }
+      ]
+    }
+  ],
+  "documents": [
+    {
+      "name": "Document",
+      "fields": [
+        {
+          "name": "Id",
+          "system": true,
+          "type": "Identifier"
+        },
+        {
+          "name": "Void",
+          "system": true,
+          "type": "Boolean"
+        },
+        {
+          "name": "Date",
+          "title": "@[Date]",
+          "type": "Date"
+        },
+        {
+          "name": "No",
+          "title": "@[Number]",
+          "length": 50
+        },
+        {
+          "name": "Memo",
+          "title": "@[Memo]",
+          "length": 255
+        },
+        {
+          "name": "Agent",
+          "length": 50,
+          "type": "Reference",
+          "refTable": "Catalog.Agent"
+        }
+      ],
+      "details": [
+        {
+          "name": "Details",
+          "fields": [
+            {
+              "name": "Id",
+              "length": 50,
+              "type": "Identifier"
+            },
+            {
+              "name": "Document",
+              "length": 50,
+              "type": "Identifier"
+            },
+            {
+              "name": "Product",
+              "length": 50,
+              "type": "Reference",
+              "refTable": "Catalog.Product"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
