@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace TestGenerator;
 
@@ -26,7 +28,8 @@ internal class Program
 				services.AddLogging()
 				.AddSingleton<ApplicationGenerator>()
 				.AddSingleton<DirectoryStructureGenerator>()
-				.AddSingleton<ModelGenerator>();
+				.AddSingleton<ModelGenerator>()
+				.AddSingleton<ModelWriter>(x => new ModelWriter(Path.GetDirectoryName(args[0])!));
 			});
 }
 

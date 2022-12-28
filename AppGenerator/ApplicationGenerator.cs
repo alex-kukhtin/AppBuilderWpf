@@ -23,13 +23,11 @@ public class ApplicationGenerator
 	}
 
 	private String? _solutionFile;
-	private String? _solutionDir;
 
 	public void GenerateAppliction(String solutionFile)
 	{
 		_logger.LogInformation("SolutionFile: {solutionFile}", solutionFile);
 		_solutionFile = solutionFile;
-		_solutionDir = Path.GetDirectoryName(solutionFile) ?? String.Empty;
 		var json = File.ReadAllText(_solutionFile);
 		var settings = new JsonSerializerSettings()
 		{
@@ -42,7 +40,7 @@ public class ApplicationGenerator
 		if (appElem == null)
 			throw new InvalidOperationException("Invalid appliction element");
 
-		var list = _dirGenerator.Generate(appElem, _solutionDir);
+		var list = _dirGenerator.Generate(appElem);
 		foreach ( var item in list )
 		{
 			_modelGenerator.Generate(item);

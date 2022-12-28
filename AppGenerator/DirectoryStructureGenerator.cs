@@ -9,22 +9,24 @@ namespace AppGenerator;
 public class DirectoryStructureGenerator
 {
 	private readonly ILogger<DirectoryStructureGenerator> _logger;
-	public DirectoryStructureGenerator(ILogger<DirectoryStructureGenerator> logger)
+	private readonly ModelWriter _modelWriter;
+	public DirectoryStructureGenerator(ModelWriter modelWriter, ILogger<DirectoryStructureGenerator> logger)
 	{
 		_logger = logger;
+		_modelWriter = modelWriter;
 	}
 
-	public IEnumerable<TableDescriptor> Generate(AppElem elem, String baseDirectory)
+	public IEnumerable<TableDescriptor> Generate(AppElem elem)
 	{
 		var tdlist = new List<TableDescriptor>();
 		// generate catalogs
 		foreach (var c in elem.Catalogs) {
 			if (!String.IsNullOrEmpty(c.Name))
 			{
-				String path = Path.Combine(baseDirectory, "catalog", c.Name.ToLowerInvariant());
+				String path = Path.Combine("catalog", c.Name.ToLowerInvariant()).Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 				var td = new TableDescriptor(path, Constants.Schemas.Catalog,  c);
 				tdlist.Add(td);
-				CreateDirectoryIfNeeded(path);
+				_modelWriter.CreateDirectory(path);
 			}
 			else
 				_logger.LogError("Catalog name is empty");
@@ -34,23 +36,14 @@ public class DirectoryStructureGenerator
 		{
 			if (!String.IsNullOrEmpty(d.Name)) {
 
-				String path = Path.Combine(baseDirectory, "document", d.Name.ToLowerInvariant());
+				String path = Path.Combine("document", d.Name.ToLowerInvariant());
 				var td = new TableDescriptor(path, Constants.Schemas.Document, d);
 				tdlist.Add(td);
-				CreateDirectoryIfNeeded(path);
+				_modelWriter.CreateDirectory(path);
 			}
 			else
 				_logger.LogError("Document name is empty");
 		}
 		return tdlist;
-	}
-
-	private void CreateDirectoryIfNeeded(String dir) 
-	{
-		if (!Directory.Exists(dir))
-		{
-			_logger.LogInformation("Create directory {dir}", dir);
-			Directory.CreateDirectory(dir);
-		}
 	}
 }
