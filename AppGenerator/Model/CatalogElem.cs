@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace AppGenerator;
 
-internal class CatalogElem : TableElem
+public class CatalogElem : TableElem
 {
 }

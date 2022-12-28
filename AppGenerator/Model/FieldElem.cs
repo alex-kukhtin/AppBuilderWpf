@@ -18,7 +18,7 @@ public enum FieldType
 	Reference,
 }
 
-internal class FieldElem : BaseElem
+public class FieldElem : BaseElem
 {
 	public Boolean System { get; set; }
 	public Int32 Length { get; set; }

@@ -1,23 +1,35 @@
 ﻿
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 using System;
-using System.Collections.Generic;
 using System.IO;
+
+using Newtonsoft.Json.Serialization;
+using Microsoft.Extensions.Logging;
 
 namespace AppGenerator;
 
 public class ApplicationGenerator
 {
-	private readonly String _solutionFile;
-	public ApplicationGenerator(String solutionFile) 
-	{ 
-		_solutionFile = solutionFile;
+	private readonly ILogger<ApplicationGenerator> _logger;
+	private readonly DirectoryStructureGenerator _dirGenerator;
+	private readonly ModelGenerator _modelGenerator;
+	public ApplicationGenerator(DirectoryStructureGenerator dirGenerator, 
+		ModelGenerator modelGenerator,
+		ILogger<ApplicationGenerator> logger) 
+	{
+		_logger = logger;
+		_dirGenerator = dirGenerator;
+		_modelGenerator = modelGenerator;
 	}
 
-	public Boolean GenerateAppliction()
+	private String? _solutionFile;
+	private String? _solutionDir;
+
+	public void GenerateAppliction(String solutionFile)
 	{
+		_logger.LogInformation("SolutionFile: {solutionFile}", solutionFile);
+		_solutionFile = solutionFile;
+		_solutionDir = Path.GetDirectoryName(solutionFile) ?? String.Empty;
 		var json = File.ReadAllText(_solutionFile);
 		var settings = new JsonSerializerSettings()
 		{
@@ -27,6 +39,13 @@ public class ApplicationGenerator
 			}
 		};
 		var appElem = JsonConvert.DeserializeObject<AppElem>(json, settings);
-		return true;
+		if (appElem == null)
+			throw new InvalidOperationException("Invalid appliction element");
+
+		var list = _dirGenerator.Generate(appElem, _solutionDir);
+		foreach ( var item in list )
+		{
+			_modelGenerator.Generate(item);
+		}
 	}
 }

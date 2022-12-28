@@ -13,7 +13,7 @@ public enum IdentifierType
 	Guid
 }
 
-internal class AppElem : BaseElem
+public class AppElem : BaseElem
 {
 	public Boolean MultiTenant { get; init; }
 	public IdentifierType IdentifierType { get; init; }

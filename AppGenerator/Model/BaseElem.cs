@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AppGenerator; 
-internal class BaseElem
+public class BaseElem
 { 
 	public String? Name { get; init; }
 	public String? Title { get; set; }

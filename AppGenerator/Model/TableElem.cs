@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AppGenerator;
 
-internal class TableElem : BaseElem
+public class TableElem : BaseElem
 {
 	public List<FieldElem> Fields { get; init; } = new();
 

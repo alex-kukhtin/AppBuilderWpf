@@ -131,7 +131,7 @@
       ],
       "details": [
         {
-          "name": "Details",
+          "name": "DocDetails",
           "fields": [
             {
               "name": "Id",
@@ -148,6 +148,21 @@
               "length": 50,
               "type": "Reference",
               "refTable": "Catalog.Product"
+            },
+            {
+              "name": "Qty",
+              "length": 50,
+              "type": "Float"
+            },
+            {
+              "name": "Price",
+              "length": 50,
+              "type": "Float"
+            },
+            {
+              "name": "Sum",
+              "length": 50,
+              "type": "Money"
             }
           ]
         }

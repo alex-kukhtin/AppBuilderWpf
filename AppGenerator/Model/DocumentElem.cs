@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace AppGenerator;
 
-internal class DocumentElem : TableElem
+public class DocumentElem : TableElem
 {
 }
