@@ -13,13 +13,16 @@ public class ApplicationGenerator
 	private readonly ILogger<ApplicationGenerator> _logger;
 	private readonly DirectoryStructureGenerator _dirGenerator;
 	private readonly ModelGenerator _modelGenerator;
+	private readonly SqlGenerator _sqlGenerator;
+
 	public ApplicationGenerator(DirectoryStructureGenerator dirGenerator, 
-		ModelGenerator modelGenerator,
+		ModelGenerator modelGenerator, SqlGenerator sqlGenerator,
 		ILogger<ApplicationGenerator> logger) 
 	{
 		_logger = logger;
 		_dirGenerator = dirGenerator;
 		_modelGenerator = modelGenerator;
+		_sqlGenerator = sqlGenerator;
 	}
 
 	private String? _solutionFile;
@@ -41,9 +44,11 @@ public class ApplicationGenerator
 			throw new InvalidOperationException("Invalid appliction element");
 
 		var list = _dirGenerator.Generate(appElem);
-		foreach ( var item in list )
+		foreach ( var item in list)
 		{
 			_modelGenerator.Generate(item);
+			_sqlGenerator.Generate(item, appElem);
 		}
-	}
+		_sqlGenerator.Finish();
+}
 }

@@ -23,7 +23,6 @@ public class ModelGenerator
 		GenerateModelJson(descr);
 		GenerateTypeScript(descr);
 		GenerateXaml(descr);
-		GenerateSql(descr);
 	}
 
 	public void GenerateModelJson(TableDescriptor descr)
@@ -60,10 +59,6 @@ public class ModelGenerator
 		_modelWriter.WriteFile(fileDialog.ToString(), descr.Path, fileName);
 	}
 
-	private void GenerateSql(TableDescriptor descr)
-	{
-
-	}
 	private void ReplaceMainMacros(StringBuilder sb, TableDescriptor descr)
 	{
 		sb.Replace("$(SchemaName)", descr.Schema);

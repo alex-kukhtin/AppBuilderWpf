@@ -4,8 +4,10 @@ namespace AppGenerator;
 
 public static class StringExtensions
 {
-	public static String Pluralize(this String text)
+	public static String Pluralize(this String? text)
 	{
+		if (text == null)
+			return String.Empty;
 		if (text.Length == 0)
 			return text;
 		if (text.EndsWith("y", StringComparison.OrdinalIgnoreCase) &&
@@ -47,5 +49,11 @@ public static class StringExtensions
 		{
 			return text + "s";
 		}
-	}	
+	}
+
+	public static String Escape(this String text)
+	{
+		// escape name
+		return text;
+	}
 }

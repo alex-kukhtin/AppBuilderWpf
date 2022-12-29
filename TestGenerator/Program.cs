@@ -29,6 +29,7 @@ internal class Program
 				.AddSingleton<ApplicationGenerator>()
 				.AddSingleton<DirectoryStructureGenerator>()
 				.AddSingleton<ModelGenerator>()
+				.AddSingleton<SqlGenerator>()
 				.AddSingleton<ModelWriter>(x => new ModelWriter(Path.GetDirectoryName(args[0])!));
 			});
 }
