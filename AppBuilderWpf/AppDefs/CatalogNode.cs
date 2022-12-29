@@ -30,7 +30,8 @@ public class CatalogNode : TableNode
 	{
 		AddField(true, "Id", FieldType.Identifier);
 		AddField(true, "Void", FieldType.Boolean);
-		AddField(false, "Name", FieldType.String, "@[Name]", 255);
+		var n = AddField(false, "Name", FieldType.String, "@[Name]", 255);
+		n.Required = true;
 		AddField(false, "Memo", FieldType.String, "@[Memo]", 255);
 	}
 }

@@ -6,6 +6,8 @@ using System.IO;
 using Newtonsoft.Json.Serialization;
 using Microsoft.Extensions.Logging;
 
+using AppGenerator.Interfaces;
+
 namespace AppGenerator;
 
 public class ApplicationGenerator
@@ -13,10 +15,10 @@ public class ApplicationGenerator
 	private readonly ILogger<ApplicationGenerator> _logger;
 	private readonly DirectoryStructureGenerator _dirGenerator;
 	private readonly ModelGenerator _modelGenerator;
-	private readonly SqlGenerator _sqlGenerator;
+	private readonly ISqlGenerator _sqlGenerator;
 
 	public ApplicationGenerator(DirectoryStructureGenerator dirGenerator, 
-		ModelGenerator modelGenerator, SqlGenerator sqlGenerator,
+		ModelGenerator modelGenerator, ISqlGenerator sqlGenerator,
 		ILogger<ApplicationGenerator> logger) 
 	{
 		_logger = logger;

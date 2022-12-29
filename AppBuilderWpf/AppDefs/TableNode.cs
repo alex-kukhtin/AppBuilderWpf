@@ -39,10 +39,13 @@ public class TableNode : BaseNode
 		Fields.Add(f);
 	}
 
-	public void AddField(Boolean system, String name, FieldType type, String? Title = null, Int32 length = 0)
+	public FieldNode AddField(Boolean system, String name, FieldType type, String? Title = null, Int32 length = 0)
 	{
 		var f = new FieldNode() { System = system, Name = name, Type = type, Title = Title, Length = length };
+		if (system)
+			f.Required = true;
 		Fields.Add(f);
+		return f;
 	}
 
 	[JsonIgnore]

@@ -1,15 +1,8 @@
 ﻿
-1. App: Identifier Type
 3. New Command
-4. Save file
 6. Generate application
-7. Open Icon
-8. Generate Icon
-9. Field. Length, Reference Visibility
-10. Field IsSystem Disabled Binding
 14. Document. Default Fields
-15. FieldType Changing -> Reset RefTable, Length
 16. Rename RefTable to Reference
-18. Field reorder commands
 20. Show FileName in WindowTitle
-21. 
+21. DocDetails Default Fields
+22. 

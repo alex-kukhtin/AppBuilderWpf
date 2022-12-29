@@ -6,13 +6,16 @@
       "fields": [
         {
           "name": "Id",
+          "title": "#",
           "system": true,
-          "type": "Identifier"
+          "type": "Identifier",
+          "required": true
         },
         {
           "name": "Void",
           "system": true,
-          "type": "Boolean"
+          "type": "Boolean",
+          "required": true
         },
         {
           "name": "Name",
@@ -31,13 +34,16 @@
       "fields": [
         {
           "name": "Id",
+          "title": "#",
           "system": true,
-          "type": "Identifier"
+          "type": "Identifier",
+          "required": true
         },
         {
           "name": "Void",
           "system": true,
-          "type": "Boolean"
+          "type": "Boolean",
+          "required": true
         },
         {
           "name": "Name",
@@ -45,20 +51,19 @@
           "length": 255
         },
         {
-          "name": "Memo",
-          "title": "@[Memo]",
-          "length": 255
+          "name": "SKU",
+          "length": 50
         },
         {
           "name": "Unit",
           "title": "@[Unit]",
-          "length": 50,
           "type": "Reference",
           "refTable": "Catalog.Unit"
         },
         {
-          "name": "SKU",
-          "length": 50
+          "name": "Memo",
+          "title": "@[Memo]",
+          "length": 255
         }
       ]
     },
@@ -67,13 +72,16 @@
       "fields": [
         {
           "name": "Id",
+          "title": "#",
           "system": true,
-          "type": "Identifier"
+          "type": "Identifier",
+          "required": true
         },
         {
           "name": "Void",
           "system": true,
-          "type": "Boolean"
+          "type": "Boolean",
+          "required": true
         },
         {
           "name": "Name",
@@ -99,13 +107,16 @@
       "fields": [
         {
           "name": "Id",
+          "title": "#",
           "system": true,
-          "type": "Identifier"
+          "type": "Identifier",
+          "required": true
         },
         {
           "name": "Void",
           "system": true,
-          "type": "Boolean"
+          "type": "Boolean",
+          "required": true
         },
         {
           "name": "Date",
@@ -124,7 +135,7 @@
         },
         {
           "name": "Agent",
-          "length": 50,
+          "title": "@[Agent]",
           "type": "Reference",
           "refTable": "Catalog.Agent"
         }
@@ -135,33 +146,30 @@
           "fields": [
             {
               "name": "Id",
-              "length": 50,
-              "type": "Identifier"
+              "type": "Identifier",
+              "required": true
             },
             {
               "name": "Document",
-              "length": 50,
-              "type": "Identifier"
+              "type": "Reference",
+              "refTable": "Document.Document",
+              "required": true
             },
             {
               "name": "Product",
-              "length": 50,
               "type": "Reference",
               "refTable": "Catalog.Product"
             },
             {
               "name": "Qty",
-              "length": 50,
               "type": "Float"
             },
             {
               "name": "Price",
-              "length": 50,
               "type": "Float"
             },
             {
               "name": "Sum",
-              "length": 50,
               "type": "Money"
             }
           ]

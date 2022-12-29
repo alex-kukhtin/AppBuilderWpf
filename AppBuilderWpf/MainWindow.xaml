@@ -30,6 +30,10 @@
 						</MenuItem.Icon>
 					</MenuItem>
 				</MenuItem>
+				<Separator />
+				<MenuItem Header="Delete" Command="{Binding DeleteCommand}">
+					
+				</MenuItem>
 			</ContextMenu>
 		</ResourceDictionary>
 	</Window.Resources>
@@ -47,8 +51,18 @@
 		<GridSplitter Width="5" Grid.Column="1" Grid.Row="1" 
 					  HorizontalAlignment="Center" VerticalAlignment="Stretch"/>
 		<ToolBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-			<Button Content="New" Command="{Binding NewCommand}"/>
-			<Button Content="Open" Command="{Binding OpenCommand}"/>
+			<Button Command="{Binding NewCommand}">
+				<StackPanel Orientation="Horizontal">
+					<Image Source="/Images/NewDocument.png" Margin="2"/>
+					<TextBlock Margin="2">New</TextBlock>
+				</StackPanel>
+			</Button>
+			<Button Command="{Binding OpenCommand}">
+				<StackPanel Orientation="Horizontal">
+					<Image Source="/Images/OpenFolder.png" Margin="2"/>
+					<TextBlock Margin="2">Open</TextBlock>
+				</StackPanel>
+			</Button>
 			<Button ToolTip="Save solution file" Command="{Binding SaveCommand}">
 				<StackPanel Orientation="Horizontal">
 					<Image Source="/Images/Save.png" Margin="2"/>
@@ -56,7 +70,19 @@
 				</StackPanel>
 			</Button>
 			<Separator />
-			<Button Content="Generate" Command="{Binding GenerateCommand}"/>
+			<Button Command="{Binding GenerateCommand}">
+				<StackPanel Orientation="Horizontal">
+					<Image Source="/Images/GenerateChangeScript.png" Margin="2"/>
+					<TextBlock Margin="2">Generate</TextBlock>
+				</StackPanel>
+			</Button>
+			<Separator />
+			<Button Command="{Binding AboutCommand}">
+				<StackPanel Orientation="Horizontal">
+					<Image Source="/Images/HelpApplication.png" Margin="2"/>
+					<TextBlock Margin="2">About</TextBlock>
+				</StackPanel>
+			</Button>
 		</ToolBar>
 		<TreeView x:Name="TreeView" Grid.Row="1" Grid.Column="0"
 				  HorizontalAlignment="Stretch" ItemsSource="{Binding Root}"

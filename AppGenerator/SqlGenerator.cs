@@ -1,13 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+using Microsoft.Extensions.Logging;
+
+using AppGenerator.Interfaces;
 
 namespace AppGenerator;
 
-public class SqlGenerator
+public class SqlGenerator : ISqlGenerator
 {
 	private readonly ModelWriter _modelWriter;
 	private readonly List<String> _tables = new();

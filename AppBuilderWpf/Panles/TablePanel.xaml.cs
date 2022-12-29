@@ -1,18 +1,8 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace AppBuilder;
 /// <summary>
@@ -35,16 +25,37 @@ public partial class TablePanel : UserControl
 	private void AddField_Click(object sender, RoutedEventArgs e)
 	{
 		_table.CreateField();
-    }
+	}
 
 	private void DeleteField_Click(object sender, RoutedEventArgs e)
 	{
 		if (e.Source is not Button btnObj)
 			return;
-		_table.Fields.First(x => x == btnObj.CommandParameter);
 		if (btnObj.CommandParameter is not FieldNode fn)
 			return;
 		_table.Fields.Remove(fn);
 	}
-}
+	private void FieldUp_Click(object sender, RoutedEventArgs e)
+	{
+		if (e.Source is not Button btnObj)
+			return;
+		if (btnObj.CommandParameter is not FieldNode fn)
+			return;
+		int pos = _table.Fields.IndexOf(fn);
+		if (pos < 1) 
+			return;
+		_table.Fields.Move(pos, pos - 1);
+	}
 
+	private void FieldDown_Click(object sender, RoutedEventArgs e)
+	{
+		if (e.Source is not Button btnObj)
+			return;
+		if (btnObj.CommandParameter is not FieldNode fn)
+			return;
+		int pos = _table.Fields.IndexOf(fn);
+		if (pos >= _table.Fields.Count - 1)
+			return;
+		_table.Fields.Move(pos, pos + 1);
+	}
+}

@@ -6,84 +6,105 @@
              xmlns:local="clr-namespace:AppBuilder"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<local:FieldTypeToVisibilityConverter x:Key="FieldTypeToVisibilityConverter" />
+		</ResourceDictionary>
+	</UserControl.Resources>
 	<StackPanel>
-		<Grid>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="300"/>
-				<ColumnDefinition Width="*"/>
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
+		<Expander Header="General" IsExpanded="True">
+			<Grid Margin="10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="300"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
 
-			<Label Grid.Row="0" Grid.Column="0">Name</Label>
-			<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" Margin="3" Padding="3"/>
-			<Label Grid.Row="1" Grid.Column="0">Title</Label>
-			<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Title}" Margin="5" Padding="3"/>
-			<Label Grid.Row="2" Grid.Column="0">Description</Label>
-			<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Description}" Margin="5" Padding="3"
+				<Label Grid.Row="0" Grid.Column="0">Name</Label>
+				<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" Margin="3" Padding="3"/>
+				<Label Grid.Row="1" Grid.Column="0">Title</Label>
+				<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Title}" Margin="5" Padding="3"/>
+				<Label Grid.Row="2" Grid.Column="0">Description</Label>
+				<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Description}" Margin="5" Padding="3"
 			TextWrapping="Wrap" AcceptsReturn="True" Height="75" VerticalScrollBarVisibility="Visible"/>
 
-		</Grid>
-		<Line />
-		<Expander Header="Feilds" IsExpanded="True">
-			<StackPanel>
-				<Button Content="Add Field" Click="AddField_Click"></Button>
-				<Border BorderBrush="LightGray" BorderThickness="1">
-					<StackPanel Background="White">
-						<Grid>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="100"/>
-								<ColumnDefinition Width="150"/>
-								<ColumnDefinition Width="90"/>
-								<ColumnDefinition Width="50"/>
-								<ColumnDefinition Width="180"/>
-								<ColumnDefinition Width="83"/>
-							</Grid.ColumnDefinitions>
-							<Label Grid.Column="0">Name</Label>
-							<Label Grid.Column="1">Title</Label>
-							<Label Grid.Column="2">Type</Label>
-							<Label Grid.Column="3">Length</Label>
-							<Label Grid.Column="4">Reference</Label>
-						</Grid>
-						<ItemsControl ItemsSource="{Binding Fields}">
-							<ItemsControl.ItemTemplate>
-								<DataTemplate>
-									<Grid>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="100"/>
-											<ColumnDefinition Width="150"/>
-											<ColumnDefinition Width="90"/>
-											<ColumnDefinition Width="50"/>
-											<ColumnDefinition Width="180"/>
-											<ColumnDefinition Width="83"/>
-										</Grid.ColumnDefinitions>
-										<TextBox Grid.Column="0" Text="{Binding Name}" Margin="3" Padding="3"/>
-										<TextBox Grid.Column="1" Text="{Binding Title}" Margin="3" Padding="3"/>
-										<ComboBox Grid.Column="2" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:FieldType}}}"
-											SelectedValue="{Binding Type}" Margin="3" Padding="6,3"/>
-										<TextBox Grid.Column="3" Text="{Binding Length}" Margin="3" Padding="3" TextAlignment="Right" />
-										<ComboBox Grid.Column="4" SelectedValue="{Binding RefTable}" 
-												  ItemsSource="{Binding RefTables, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-													Margin="3" Padding="6,3"/>
-										<StackPanel Grid.Column="5" Orientation="Horizontal" Margin="3">
-											<Button Content="↑" Width="25" Margin="0,0,1,0"/>
-											<Button Content="↓" Width="25" Margin="0,0,1,0"/>
-											<Button Content="×" Width="25"
-												Click="DeleteField_Click" CommandParameter="{Binding}"/>
-										</StackPanel>
-									</Grid>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
-					</StackPanel>
-				</Border>
+			</Grid>
+		</Expander>
+		<Expander Header="Feilds" IsExpanded="True" Margin="0,20,0,0">
+			<StackPanel Margin="10">
+				<ToolBar>
+					<Button Click="AddField_Click">
+						<StackPanel Orientation="Horizontal">
+							<Image Source="/Images/Save.png" Margin="2"/>
+							<TextBlock Margin="2">Add Field</TextBlock>
+						</StackPanel>
+					</Button>
+				</ToolBar>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="83"/>
+						<ColumnDefinition Width="100"/>
+						<ColumnDefinition Width="150"/>
+						<ColumnDefinition Width="90"/>
+						<ColumnDefinition Width="60"/>
+						<ColumnDefinition Width="50"/>
+						<ColumnDefinition Width="180"/>
+					</Grid.ColumnDefinitions>
+					<Label Grid.Column="1">Name</Label>
+					<Label Grid.Column="2">Title</Label>
+					<Label Grid.Column="3">Type</Label>
+					<Label Grid.Column="4">Required</Label>
+					<Label Grid.Column="5">Length</Label>
+					<Label Grid.Column="6">Reference</Label>
+				</Grid>
+				<ItemsControl ItemsSource="{Binding Fields}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="83"/>
+									<ColumnDefinition Width="100"/>
+									<ColumnDefinition Width="150"/>
+									<ColumnDefinition Width="90"/>
+									<ColumnDefinition Width="60"/>
+									<ColumnDefinition Width="50"/>
+									<ColumnDefinition Width="180"/>
+								</Grid.ColumnDefinitions>
+								<StackPanel Grid.Column="0" Orientation="Horizontal" Margin="3">
+									<Button Content="↑" Width="25" Margin="0,0,1,0"
+										Click="FieldUp_Click" CommandParameter="{Binding}"/>
+									<Button Content="↓" Width="25" Margin="0,0,1,0"
+										Click="FieldDown_Click" CommandParameter="{Binding}"/>
+									<Button Content="×" Width="25"
+										Click="DeleteField_Click" CommandParameter="{Binding}"
+										Visibility="{Binding VisibleIsNotSystem}"/>
+								</StackPanel>
+								<TextBox Grid.Column="1" Text="{Binding Name}" Margin="3" Padding="3"
+										 IsEnabled="{Binding IsEnabled}"/>
+								<TextBox Grid.Column="2" Text="{Binding Title}" Margin="3" Padding="3"/>
+								<ComboBox Grid.Column="3" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:FieldType}}}"
+										SelectedValue="{Binding Type}" Margin="3" Padding="6,3"
+										IsEnabled="{Binding IsEnabled}"/>
+								<CheckBox Grid.Column="4" IsChecked="{Binding Required}" HorizontalAlignment="Center" VerticalAlignment="Center"
+										IsEnabled="{Binding IsEnabled}"/>
+								<TextBox Grid.Column="5" Text="{Binding Length}" Margin="3" Padding="3" TextAlignment="Right" 
+									Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='String'}"/>
+								<ComboBox Grid.Column="6" SelectedValue="{Binding RefTable}" 
+									ItemsSource="{Binding RefTables, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+									Margin="3" Padding="6,3" 
+									Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='Reference'}"/>
+							</Grid>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
 			</StackPanel>
 		</Expander>
 	</StackPanel>

@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.VisualBasic.FileIO;
 using System;
 
 namespace AppGenerator;
@@ -20,20 +21,22 @@ public enum FieldType
 
 public class FieldElem : BaseElem
 {
-	public Boolean System { get; set; }
-	public Int32 Length { get; set; }
-	public FieldType Type { get; set; }
-	public String? RefTable { get; set; }
+	public Boolean System { get; init; }
+	public Int32 Length { get; init; }
+	public FieldType Type { get; init; }
+	public String? RefTable { get; init; }
+	public Boolean Required { get; init; }
 
 	public String SqlType(IdentifierType identType)
 	{
 		return Type switch
 		{
 			FieldType.String => $"nvarchar({Length})",
+			FieldType.Integer => "int",
 			FieldType.BigInt or FieldType.Money  or FieldType.Float or
 			FieldType.Date or FieldType.DateTime
 				=> Type.ToString().ToLowerInvariant(),
-			FieldType.Guid => $"uniqueidentifier",
+			FieldType.Guid => "uniqueidentifier",
 			FieldType.Boolean => $"bit",
 			FieldType.Reference => identType.ToString().ToLowerInvariant(),
 			FieldType.Identifier => $"{identType.ToString().ToLowerInvariant()} not null",

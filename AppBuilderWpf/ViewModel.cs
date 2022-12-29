@@ -66,6 +66,8 @@ public class ViewModel : INotifyPropertyChanged
 	public ICommand GenerateCommand => new GenerateCommand(this);
 	public ICommand AddCommand => new AddCommand(this);
 	public ICommand SaveCommand => new SaveCommand(this);
+	public ICommand DeleteCommand => new DeleteCommand(this);
 	public ICommand AddDetailsCommand => _addDetailCommand ??= new AddDetailsCommand(this);
+	public ICommand AboutCommand => new AboutCommand(this);
 }
 
