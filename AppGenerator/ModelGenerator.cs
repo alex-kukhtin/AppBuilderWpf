@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2022 Oleksandr Kukhtin. All rights reserved.
+
 using System;
 using System.IO;
 using System.Reflection;
@@ -6,13 +7,15 @@ using System.Text;
 
 using Microsoft.Extensions.Logging;
 
+using AppGenerator.Interfaces;
+
 namespace AppGenerator;
 
 public class ModelGenerator
 {
 	private readonly ILogger<ModelGenerator> _logger;
-	private readonly ModelWriter _modelWriter;
-	public ModelGenerator(ModelWriter modelWriter, ILogger<ModelGenerator> logger)
+	private readonly IModelWriter _modelWriter;
+	public ModelGenerator(IModelWriter modelWriter, ILogger<ModelGenerator> logger)
 	{
 		_logger = logger;
 		_modelWriter = modelWriter;

@@ -1,7 +1,9 @@
-﻿
+﻿// Copyright © 2022 Oleksandr Kukhtin. All rights reserved.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
+using AppGenerator.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace AppGenerator;
@@ -9,8 +11,8 @@ namespace AppGenerator;
 public class DirectoryStructureGenerator
 {
 	private readonly ILogger<DirectoryStructureGenerator> _logger;
-	private readonly ModelWriter _modelWriter;
-	public DirectoryStructureGenerator(ModelWriter modelWriter, ILogger<DirectoryStructureGenerator> logger)
+	private readonly IModelWriter _modelWriter;
+	public DirectoryStructureGenerator(IModelWriter modelWriter, ILogger<DirectoryStructureGenerator> logger)
 	{
 		_logger = logger;
 		_modelWriter = modelWriter;

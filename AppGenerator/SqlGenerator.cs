@@ -1,4 +1,6 @@
-﻿using System;
+﻿// Copyright © 2022 Oleksandr Kukhtin. All rights reserved.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,10 +12,10 @@ namespace AppGenerator;
 
 public class SqlGenerator : ISqlGenerator
 {
-	private readonly ModelWriter _modelWriter;
+	private readonly IModelWriter _modelWriter;
 	private readonly List<String> _tables = new();
-	private readonly ILogger<SqlGenerator> _logger;
-	public SqlGenerator(ILogger<SqlGenerator> logger, ModelWriter modelWriter)
+	private readonly ILogger<ISqlGenerator> _logger;
+	public SqlGenerator(ILogger<ISqlGenerator> logger, IModelWriter modelWriter)
 	{
 		_logger = logger;
 		_modelWriter = modelWriter;
@@ -29,7 +31,7 @@ public class SqlGenerator : ISqlGenerator
 		var sb = new StringBuilder();
 		foreach (var table in _tables)
 			sb.Append(table);
-		Console.WriteLine(sb.ToString());
+		_modelWriter.WriteFile(sb.ToString(), "_sql", "struct.sql");
 	}
 
 	private void GenerateTable(TableDescriptor descr, AppElem appElem)

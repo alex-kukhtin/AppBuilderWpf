@@ -1,4 +1,5 @@
 ﻿using AppGenerator;
+using AppGenerator.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -29,8 +30,8 @@ internal class Program
 				.AddSingleton<ApplicationGenerator>()
 				.AddSingleton<DirectoryStructureGenerator>()
 				.AddSingleton<ModelGenerator>()
-				.AddSingleton<SqlGenerator>()
-				.AddSingleton<ModelWriter>(x => new ModelWriter(Path.GetDirectoryName(args[0])!));
+				.AddSingleton<ISqlGenerator, SqlGenerator>()
+				.AddSingleton<IModelWriter>(x => new ModelWriter(Path.GetDirectoryName(args[0])!));
 			});
 }
 

@@ -1,15 +1,14 @@
-﻿using Newtonsoft.Json.Bson;
+﻿// Copyright © 2022 Oleksandr Kukhtin. All rights reserved.
+
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
+
+using AppGenerator.Interfaces;
 
 namespace AppGenerator;
 
-public class ModelWriter
+public class ModelWriter : IModelWriter
 {
 	private readonly String _solutionPath;
 	public ModelWriter(String solutionPath)
