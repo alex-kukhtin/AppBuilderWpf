@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppGenerator\AppGenerator.csproj" />
+    <ProjectReference Include="..\SqlGenerator.MsSqlServer\SqlGenerator.MsSqlServer.csproj" />
   </ItemGroup>
 
 </Project>

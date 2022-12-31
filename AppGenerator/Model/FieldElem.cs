@@ -1,5 +1,5 @@
-﻿
-using Microsoft.VisualBasic.FileIO;
+﻿// Copyright © 2022 Oleksandr Kukhtin. All rights reserved.
+
 using System;
 
 namespace AppGenerator;
@@ -27,20 +27,5 @@ public class FieldElem : BaseElem
 	public String? RefTable { get; init; }
 	public Boolean Required { get; init; }
 
-	public String SqlType(IdentifierType identType)
-	{
-		return Type switch
-		{
-			FieldType.String => $"nvarchar({Length})",
-			FieldType.Integer => "int",
-			FieldType.BigInt or FieldType.Money  or FieldType.Float or
-			FieldType.Date or FieldType.DateTime
-				=> Type.ToString().ToLowerInvariant(),
-			FieldType.Guid => "uniqueidentifier",
-			FieldType.Boolean => $"bit",
-			FieldType.Reference => identType.ToString().ToLowerInvariant(),
-			FieldType.Identifier => $"{identType.ToString().ToLowerInvariant()} not null",
-			_ => throw new NotImplementedException()
-		};
-	}
+	public Boolean IsId => Name == "Id";
 }

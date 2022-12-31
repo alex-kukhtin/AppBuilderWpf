@@ -5,4 +5,8 @@
 16. Rename RefTable to Reference
 20. Show FileName in WindowTitle
 21. DocDetails Default Fields
-22. 
+22. Validate model
+
+SQL builder
+	2. Primary key
+	4. Default for Void (?)

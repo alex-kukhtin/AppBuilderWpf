@@ -20,6 +20,7 @@ public class DirectoryStructureGenerator
 
 	public IEnumerable<TableDescriptor> Generate(AppElem elem)
 	{
+		_modelWriter.CreateDirectory("_sql");
 		var tdlist = new List<TableDescriptor>();
 		// generate catalogs
 		foreach (var c in elem.Catalogs) {

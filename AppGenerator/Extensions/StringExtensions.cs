@@ -17,7 +17,7 @@ public static class StringExtensions
 			!text.EndsWith("oy", StringComparison.OrdinalIgnoreCase) &&
 			!text.EndsWith("uy", StringComparison.OrdinalIgnoreCase))
 		{
-			return text.Substring(0, text.Length - 1) + "ies";
+			return text[..^1] + "ies";
 		}
 		else if (text.EndsWith("us", StringComparison.InvariantCultureIgnoreCase))
 		{
@@ -39,21 +39,15 @@ public static class StringExtensions
 		}
 		else if (text.EndsWith("f", StringComparison.InvariantCultureIgnoreCase) && text.Length > 1)
 		{
-			return text.Substring(0, text.Length - 1) + "ves";
+			return text[..^1] + "ves";
 		}
 		else if (text.EndsWith("fe", StringComparison.InvariantCultureIgnoreCase) && text.Length > 2)
 		{
-			return text.Substring(0, text.Length - 2) + "ves";
+			return text[..^2] + "ves";
 		}
 		else
 		{
 			return text + "s";
 		}
-	}
-
-	public static String Escape(this String text)
-	{
-		// escape name
-		return text;
 	}
 }

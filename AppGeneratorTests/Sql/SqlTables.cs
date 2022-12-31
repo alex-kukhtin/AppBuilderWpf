@@ -35,7 +35,9 @@ public class SqlTables
 			IdentifierType = IdentifierType.BigInt
 		};
 		sqlGen.Generate(td, root);
-		sqlGen.Finish();
+		var result = sqlGen.Finish();
+
+		Assert.IsNotNull(result);
 	}
 
 }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using AppGenerator;
 using AppGenerator.Interfaces;
 using Microsoft.Extensions.Logging;
+using SqlGenerator.MsSqlServer;
 
 namespace AppGeneratorTests;
 
@@ -24,7 +25,7 @@ internal class TestEngine
 		collection
 			.AddLogging()
 			.AddSingleton(sp => loggerFactory.CreateLogger<ISqlGenerator>())
-			.AddSingleton<ISqlGenerator, SqlGenerator>()
+			.AddSingleton<ISqlGenerator, MsSqlServerSqlGenerator>()
 			.AddSingleton<IModelWriter, ModelWriterMock>();
 
 		_provider = collection.BuildServiceProvider();
