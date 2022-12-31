@@ -10,3 +10,4 @@
 SQL builder
 	2. Primary key
 	4. Default for Void (?)
+	5. Create schemas
