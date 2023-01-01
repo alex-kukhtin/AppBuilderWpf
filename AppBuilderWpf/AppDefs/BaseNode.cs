@@ -18,6 +18,7 @@ public class BaseNode : INotifyPropertyChanged
 		set { 
 			_name = value; 
 			OnPropertyChanged();
+			OnNameChanged();
 		} 
 	}
 
@@ -56,4 +57,8 @@ public class BaseNode : INotifyPropertyChanged
 
 	[JsonIgnore]
 	public virtual String Image => "/Images/FolderClosed.png";
+
+	public virtual void OnNameChanged() 
+	{ 
+	}
 }

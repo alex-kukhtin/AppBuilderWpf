@@ -1,8 +1,11 @@
-﻿using AppGenerator;
-using AppGenerator.Interfaces;
-using Microsoft.Extensions.Logging;
-using SqlGenerator.MsSqlServer.Extensions;
+﻿// Copyright © 2022 Oleksandr Kukhtin. All rights reserved.
+
 using System.Text;
+
+using Microsoft.Extensions.Logging;
+
+using AppGenerator;
+using AppGenerator.Interfaces;
 
 namespace SqlGenerator.MsSqlServer;
 
@@ -51,14 +54,43 @@ public class MsSqlServerSqlGenerator : ISqlGenerator
 		_modelWriter = modelWriter;
 	}
 
-	public void Generate(TableDescriptor descr, AppElem appElem)
+	public void GenerateStruct(TableDescriptor descr, AppElem appElem)
 	{
 		GenerateTable(descr, appElem);
 	}
 
+	public void GenerateEndpoint(TableDescriptor descr, AppElem appElem)
+	{
+		if (String.IsNullOrEmpty(descr.Path))
+			return;
+		new EndpointGenerator(_modelWriter, descr, appElem).Generate();
+	}
+
+	public String CreateSchemas()
+	{
+		return @"
+-- SCHEMAS
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'cat')
+	exec sp_executesql N'create schema cat';
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'doc')
+	exec sp_executesql N'create schema doc';
+go
+------------------------------------------------
+begin
+	set nocount on;
+	grant execute on schema ::cat to public;
+	grant execute on schema ::doc to public;
+end
+go
+";
+	}
 	public String Finish()
 	{
 		var sb = new StringBuilder();
+		sb.Append(CreateSchemas());
 		foreach (var table in _tables)
 			sb.Append(table);
 		if (_foreignKeys.Count > 0)
@@ -101,6 +133,9 @@ create table {descr.Schema.SchemaName()}.{descr.Table.TableName}
 				_foreignKeys.Add(fr.ForeignKey);
 
 		}
+		// primary key
+		String pkFields = appElem.MultiTenant ? "TenantId, Id" : "Id";
+		fields.Add($"\tconstraint PK_{descr.Table.TableName} primary key ({pkFields})");
 		sb.AppendLine(String.Join(",\n", fields));
 		sb.AppendLine(");\ngo");
 
@@ -120,7 +155,8 @@ create table {descr.Schema.SchemaName()}.{descr.Table.TableName}
 				throw new InvalidOperationException($"The reference '{field.Name}' is empty");
 			var refTable = root.FindTableByReference(field.RefTable);
 			var foreignKeyName = $"FK_{tableName}_{field.Name}_{refTable.Table.TableName}";
-			foreignKey = $"constraint {foreignKeyName} foreign key references {refTable.Schema.SchemaName()}.{refTable.Table.TableName}({refTable.Table.PrimaryKey.Name})";
+			String pkName = root.MultiTenant ? $"TenantId, {refTable.Table.PrimaryKey.Name}" : $"{refTable.Table.PrimaryKey.Name}";
+			foreignKey = $"constraint {foreignKeyName} foreign key references {refTable.Schema.SchemaName()}.{refTable.Table.TableName}({pkName})";
 			foreignKeyResult = new ForeignKey(foreignKeyName, foreignKey, tableDescr);
 		}
 		String fkText = String.Empty;
@@ -128,6 +164,8 @@ create table {descr.Schema.SchemaName()}.{descr.Table.TableName}
 			fkText = $"\n\t\t/* {foreignKey} */";
 		if (field.IsId && root.IdentifierType.HasSequence())
 			defaultConstraint = $"\n\t\tconstraint DF_{tableName}_{field.Name} default (next value for {tableDescr.Schema.SchemaName()}.SQ_{tableName})";
+		else if (field.Required && field.Name == "Void")
+			defaultConstraint = $"\n\t\tconstraint DF_{tableName}_{field.Name} default (0)";
 		return new FieldResult($"\t{field.Name.Escape()} {field.SqlType(root.IdentifierType)}{nullable}{defaultConstraint}{fkText}", foreignKeyResult);
 	}
 }

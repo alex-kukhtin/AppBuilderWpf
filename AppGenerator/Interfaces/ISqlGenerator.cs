@@ -6,6 +6,7 @@ namespace AppGenerator.Interfaces;
 
 public interface ISqlGenerator
 {
-	void Generate(TableDescriptor descr, AppElem appElem);
+	void GenerateStruct(TableDescriptor descr, AppElem appElem);
+	void GenerateEndpoint(TableDescriptor descr, AppElem appElem);
 	String Finish();
 }

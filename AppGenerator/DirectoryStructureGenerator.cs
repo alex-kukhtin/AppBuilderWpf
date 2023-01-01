@@ -42,6 +42,8 @@ public class DirectoryStructureGenerator
 				String path = Path.Combine("document", d.Name.ToLowerInvariant());
 				var td = new TableDescriptor(path, Constants.Schemas.Document, d);
 				tdlist.Add(td);
+				foreach (var dd in d.Details)
+					tdlist.Add(new TableDescriptor(String.Empty, Constants.Schemas.Document, dd, true));
 				_modelWriter.CreateDirectory(path);
 			}
 			else

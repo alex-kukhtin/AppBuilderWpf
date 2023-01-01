@@ -48,8 +48,12 @@ public class ApplicationGenerator
 		var list = _dirGenerator.Generate(appElem);
 		foreach ( var item in list)
 		{
-			_modelGenerator.Generate(item);
-			_sqlGenerator.Generate(item, appElem);
+			if (item.HasEndpoint)
+			{
+				_modelGenerator.Generate(item);
+				_sqlGenerator.GenerateEndpoint(item, appElem);
+			}
+			_sqlGenerator.GenerateStruct(item, appElem);
 		}
 		_sqlGenerator.Finish();
 }

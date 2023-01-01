@@ -8,14 +8,15 @@
           "name": "Id",
           "title": "#",
           "system": true,
-          "type": "Identifier",
-          "required": true
+          "required": true,
+          "type": "Identifier"
         },
         {
           "name": "Void",
           "system": true,
+          "required": true,
           "type": "Boolean",
-          "required": true
+          "default": "0"
         },
         {
           "name": "Name",
@@ -36,14 +37,15 @@
           "name": "Id",
           "title": "#",
           "system": true,
-          "type": "Identifier",
-          "required": true
+          "required": true,
+          "type": "Identifier"
         },
         {
           "name": "Void",
           "system": true,
+          "required": true,
           "type": "Boolean",
-          "required": true
+          "default": "0"
         },
         {
           "name": "Name",
@@ -74,14 +76,15 @@
           "name": "Id",
           "title": "#",
           "system": true,
-          "type": "Identifier",
-          "required": true
+          "required": true,
+          "type": "Identifier"
         },
         {
           "name": "Void",
           "system": true,
+          "required": true,
           "type": "Boolean",
-          "required": true
+          "default": "0"
         },
         {
           "name": "Name",
@@ -109,14 +112,15 @@
           "name": "Id",
           "title": "#",
           "system": true,
-          "type": "Identifier",
-          "required": true
+          "required": true,
+          "type": "Identifier"
         },
         {
           "name": "Void",
           "system": true,
+          "required": true,
           "type": "Boolean",
-          "required": true
+          "default": "0"
         },
         {
           "name": "Date",
@@ -146,14 +150,17 @@
           "fields": [
             {
               "name": "Id",
-              "type": "Identifier",
-              "required": true
+              "system": true,
+              "required": true,
+              "type": "Identifier"
             },
             {
               "name": "Document",
+              "system": true,
+              "required": true,
+              "parent": true,
               "type": "Reference",
-              "refTable": "Document.Document",
-              "required": true
+              "refTable": "Document.Document"
             },
             {
               "name": "Product",

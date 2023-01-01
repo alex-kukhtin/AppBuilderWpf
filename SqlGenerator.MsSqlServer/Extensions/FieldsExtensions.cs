@@ -1,6 +1,6 @@
-﻿
+﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
+
 using AppGenerator;
-using SqlGenerator.MsSqlServer.Extensions;
 
 namespace SqlGenerator.MsSqlServer;
 internal static class FieldsExtensions

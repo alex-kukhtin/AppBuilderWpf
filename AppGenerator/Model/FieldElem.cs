@@ -26,6 +26,7 @@ public class FieldElem : BaseElem
 	public FieldType Type { get; init; }
 	public String? RefTable { get; init; }
 	public Boolean Required { get; init; }
+	public String? Default { get; init; }
 
 	public Boolean IsId => Name == "Id";
 }

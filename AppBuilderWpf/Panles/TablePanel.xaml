@@ -9,6 +9,7 @@
 	<UserControl.Resources>
 		<ResourceDictionary>
 			<local:FieldTypeToVisibilityConverter x:Key="FieldTypeToVisibilityConverter" />
+			<local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 		</ResourceDictionary>
 	</UserControl.Resources>
 	<StackPanel>
@@ -101,6 +102,10 @@
 									ItemsSource="{Binding RefTables, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
 									Margin="3" Padding="6,3" 
 									Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='Reference'}"/>
+								<!--
+								<TextBox Grid.Column="7" Text="{Binding Default}" Margin="3" Padding="3"
+									Visibility="{Binding Required, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+								-->
 							</Grid>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace AppBuilder;
@@ -54,7 +54,23 @@ public class TableNode : BaseNode
 	public void AddDetails()
 	{
 		var t = new TableNode() { Name = $"Details{Details.Count + 1}" };
+		var parent = t.AddField(true, Name!, FieldType.Reference);
+		parent.RefTable = NameWithSchema;
+		parent.Required = true;
+		parent.Parent = true;
 		Details.Add(t);
 		t.IsSelected = true;
+	}
+
+	public override void OnNameChanged()
+	{
+		foreach (var d in Details)
+		{
+			foreach (var f in d.Fields.Where(f => f.Parent))
+			{
+				f.RefTable = NameWithSchema;
+				f.Name = Name;
+			}
+		}
 	}
 }
