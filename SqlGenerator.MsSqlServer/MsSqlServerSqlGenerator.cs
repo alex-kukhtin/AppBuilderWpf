@@ -63,7 +63,7 @@ public class MsSqlServerSqlGenerator : ISqlGenerator
 	{
 		if (String.IsNullOrEmpty(descr.Path))
 			return;
-		new EndpointGenerator(_modelWriter, descr, appElem).Generate();
+		var fileName = new EndpointGenerator(_modelWriter, descr, appElem).Generate();
 	}
 
 	public String CreateSchemas()
@@ -103,6 +103,7 @@ go
 		}
 		var content = sb.ToString();
 		_modelWriter.WriteFile(content, "_sql", "struct.sql");
+		_modelWriter.WriteFile("", "", "sql.json");
 		return content;
 	}
 

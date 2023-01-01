@@ -17,10 +17,10 @@ internal class EndpointGenerator
 		_root = root;	
 	}
 
-	public void Generate()
+	public String Generate()
 	{
 		String fileName = $"{_descr.Table.Name!.ToLowerInvariant()}.model.sql";
 		_writer.WriteFile("", _descr.Path, fileName);
-		int z = 55;
+		return $"{_descr.Path}/{fileName}";
 	}
 }
