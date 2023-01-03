@@ -7,6 +7,8 @@ using Newtonsoft.Json.Serialization;
 using Microsoft.Extensions.Logging;
 
 using AppGenerator.Interfaces;
+using System.Data.SqlTypes;
+using System.Collections.Generic;
 
 namespace AppGenerator;
 
@@ -16,15 +18,17 @@ public class ApplicationGenerator
 	private readonly DirectoryStructureGenerator _dirGenerator;
 	private readonly ModelGenerator _modelGenerator;
 	private readonly ISqlGenerator _sqlGenerator;
+	private readonly IModelWriter _modelWriter;
 
 	public ApplicationGenerator(DirectoryStructureGenerator dirGenerator, 
 		ModelGenerator modelGenerator, ISqlGenerator sqlGenerator,
-		ILogger<ApplicationGenerator> logger) 
+		IModelWriter modelWriter, ILogger<ApplicationGenerator> logger) 
 	{
 		_logger = logger;
 		_dirGenerator = dirGenerator;
 		_modelGenerator = modelGenerator;
 		_sqlGenerator = sqlGenerator;
+		_modelWriter = modelWriter;
 	}
 
 	private String? _solutionFile;
@@ -34,27 +38,33 @@ public class ApplicationGenerator
 		_logger.LogInformation("SolutionFile: {solutionFile}", solutionFile);
 		_solutionFile = solutionFile;
 		var json = File.ReadAllText(_solutionFile);
-		var settings = new JsonSerializerSettings()
-		{
-			ContractResolver = new DefaultContractResolver()
-			{
-				NamingStrategy = new CamelCaseNamingStrategy()
-			}
-		};
-		var appElem = JsonConvert.DeserializeObject<AppElem>(json, settings);
+		var appElem = JsonConvert.DeserializeObject<AppElem>(json, JsonHelpers.DefaultSettings);
 		if (appElem == null)
 			throw new InvalidOperationException("Invalid appliction element");
 
 		var list = _dirGenerator.Generate(appElem);
+		var sqlJsonElem = new SqlJson()
+		{
+			Version = "1.0.0",
+			OutputFile = "application.sql"
+		};
+		sqlJsonElem.InputFiles.Add("_sql/_struct.sql");
+		sqlJsonElem.InputFiles.Add("_sql/_ui.sql");
 		foreach ( var item in list)
 		{
 			if (item.HasEndpoint)
 			{
 				_modelGenerator.Generate(item);
-				_sqlGenerator.GenerateEndpoint(item, appElem);
+				var fileName = _sqlGenerator.GenerateEndpoint(item, appElem);
+				sqlJsonElem.InputFiles.Add(fileName);
 			}
 			_sqlGenerator.GenerateStruct(item, appElem);
 		}
 		_sqlGenerator.Finish();
+		var sqlJsonArray = new List<SqlJson>()
+		{
+			sqlJsonElem
+		};
+		_modelWriter.WriteFile(JsonConvert.SerializeObject(sqlJsonArray, JsonHelpers.DefaultSettings), "", "sql.json");
 }
 }

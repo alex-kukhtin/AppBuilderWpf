@@ -77,7 +77,7 @@ public class FieldNode : BaseNode
 
 	[JsonIgnore]
 
-	public Boolean IsEnabled => System ? false : true;
+	public Boolean IsEnabled => !System;
 
 	[JsonIgnore]
 	public Visibility VisibleIsNotSystem => System ? Visibility.Hidden : Visibility.Visible;

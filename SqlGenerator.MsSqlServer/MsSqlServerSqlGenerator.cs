@@ -59,11 +59,11 @@ public class MsSqlServerSqlGenerator : ISqlGenerator
 		GenerateTable(descr, appElem);
 	}
 
-	public void GenerateEndpoint(TableDescriptor descr, AppElem appElem)
+	public String GenerateEndpoint(TableDescriptor descr, AppElem appElem)
 	{
 		if (String.IsNullOrEmpty(descr.Path))
-			return;
-		var fileName = new EndpointGenerator(_modelWriter, descr, appElem).Generate();
+			return String.Empty;
+		return new EndpointGenerator(_modelWriter, descr, appElem).Generate();
 	}
 
 	public String CreateSchemas()
@@ -87,7 +87,7 @@ end
 go
 ";
 	}
-	public String Finish()
+	public void Finish()
 	{
 		var sb = new StringBuilder();
 		sb.Append(CreateSchemas());
@@ -102,9 +102,8 @@ go
 			}
 		}
 		var content = sb.ToString();
-		_modelWriter.WriteFile(content, "_sql", "struct.sql");
-		_modelWriter.WriteFile("", "", "sql.json");
-		return content;
+		_modelWriter.WriteFile(content, "_sql", "_struct.sql");
+		_modelWriter.WriteFile("", "_sql", "_ui.sql");
 	}
 
 	private void GenerateTable(TableDescriptor descr, AppElem appElem)

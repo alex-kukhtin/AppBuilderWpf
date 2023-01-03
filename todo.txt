@@ -6,8 +6,11 @@
 20. Show FileName in WindowTitle
 21. DocDetails Default Fields
 22. Validate model
+23. Call Generator from AppBuilderWpf
+24.
 
 SQL builder
 	2. Primary key
 	4. Default for Void (?)
-	7.
+	7. Generate _ui.sql
+	8. Add struct.sql, ui.sql

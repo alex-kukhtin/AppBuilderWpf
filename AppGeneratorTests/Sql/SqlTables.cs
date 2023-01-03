@@ -17,6 +17,7 @@ public class SqlTables
 		var sp = TestEngine.ServiceProvider();
 		var sqlGen = sp.GetRequiredService<ISqlGenerator>();
 		var writer = sp.GetService<IModelWriter>();
+
 		var td = new TableDescriptor("/catalog1", "Catalog", new TableElem()
 		{
 			Name = "Unit",
@@ -34,10 +35,9 @@ public class SqlTables
 		{
 			IdentifierType = IdentifierType.BigInt
 		};
-		sqlGen.Generate(td, root);
-		var result = sqlGen.Finish();
+		sqlGen.GenerateStruct(td, root);
+		sqlGen.Finish();
 
-		Assert.IsNotNull(result);
 	}
 
 }

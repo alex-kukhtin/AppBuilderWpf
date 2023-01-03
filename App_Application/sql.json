@@ -1,1 +1,15 @@
-﻿
+﻿[
+  {
+    "$schema": null,
+    "version": "1.0.0",
+    "outputFile": "application.sql",
+    "inputFiles": [
+      "_sql/_struct.sql",
+      "_sql/_ui.sql",
+      "catalog/unit/unit.model.sql",
+      "catalog/product/product.model.sql",
+      "catalog/agent/agent.model.sql",
+      "document/document/document.model.sql"
+    ]
+  }
+]
