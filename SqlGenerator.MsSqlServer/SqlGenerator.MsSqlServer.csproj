@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\ui.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ui.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AppGenerator\AppGenerator.csproj" />
   </ItemGroup>
 

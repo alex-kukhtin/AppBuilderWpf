@@ -1,7 +1,7 @@
-﻿<!--$(SchemaName).$(ModelName) Index -->
+﻿<!--Catalog.Product Index -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
 	<Page.CollectionView>
-		<CollectionView ItemsSource="{Bind $(CollectionName)}" RunAt="ServerUrl">
+		<CollectionView ItemsSource="{Bind Products}" RunAt="ServerUrl">
 			<CollectionView.Filter>
 				<FilterDescription>
 					<FilterItem Property="Fragment" DataType="String"/>
@@ -12,19 +12,19 @@
 	<Grid Rows="Auto,1*,Auto" Height="100%">
 		<Toolbar Grid.Row="1">
 			<Button Icon="Plus" Content="@[Create]"
-					Command="{BindCmd Dialog, Action=Append, Argument={Bind $(CollectionName)}, Url='$(EditUrl)'}"/>
+					Command="{BindCmd Dialog, Action=Append, Argument={Bind Products}, Url='/catalog/product/edit'}"/>
 			<Button Icon="Edit"
-				Command="{BindCmd Dialog, Action=EditSelected, Argument={Bind $(CollectionName)}, Url='$(EditUrl)'}"/>
+				Command="{BindCmd Dialog, Action=EditSelected, Argument={Bind Products}, Url='/catalog/product/edit'}"/>
 		</Toolbar>
 		<DataGrid Grid.Row="2"  ItemsSource="{Bind Parent.ItemsSource}" FixedHeader="True"
-				  DoubleClick="{BindCmd Dialog, Action=EditSelected, Argument={Bind $(CollectionName)}, Url='$(EditUrl)'}">
+				  DoubleClick="{BindCmd Dialog, Action=EditSelected, Argument={Bind Products}, Url='/catalog/product/edit'}">
 			<DataGridColumn Header="#" Content="{Bind Id}" Role="Id"/>
 			<DataGridColumn Header="@[Name]" Content="{Bind Name}" />
 			<DataGridColumn Header="@[Memo]" Content="{Bind Memo}" />
 			<DataGridColumn Fit="True" Wrap="NoWrap">
 				<CommandBar Visibility="Hover">
 					<Button Icon="Edit" 
-							Command="{BindCmd Dialog, Action=Edit, Argument={Bind}, Url='$(EditUrl)'}"/>
+							Command="{BindCmd Dialog, Action=Edit, Argument={Bind}, Url='/catalog/product/edit'}"/>
 				</CommandBar>
 			</DataGridColumn>
 		</DataGrid>

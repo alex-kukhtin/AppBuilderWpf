@@ -22,7 +22,7 @@ internal static class FieldsExtensions
 			FieldType.Guid => "uniqueidentifier",
 			FieldType.Boolean => $"bit",
 			FieldType.Reference => identType.ToString().ToLowerInvariant(),
-			FieldType.Identifier => $"{identType.ToString().ToLowerInvariant()} not null",
+			FieldType.Identifier => $"{identType.ToString().ToLowerInvariant()}",
 			_ => throw new NotImplementedException()
 		};
 	}

@@ -2,7 +2,7 @@
   "profiles": {
     "TestGenerator": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\A2v10_Net6\\AppBuilder\\App_Application\\main.solution.json"
+      "commandLineArgs": "C:\\A2v10_Net6\\AppBuilder\\AppBuilderTest\\App_application\\main.solution.json"
     }
   }
 }

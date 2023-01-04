@@ -46,19 +46,22 @@ public class ApplicationGenerator
 		var sqlJsonElem = new SqlJson()
 		{
 			Version = "1.0.0",
-			OutputFile = "application.sql"
+			Schema = "@schemas/sql-json-schema.json#",
+			OutputFile = "dst/application.sql"
 		};
 		sqlJsonElem.InputFiles.Add("_sql/_struct.sql");
 		sqlJsonElem.InputFiles.Add("_sql/_ui.sql");
+		_sqlGenerator.Start(appElem);
 		foreach ( var item in list)
 		{
 			if (item.HasEndpoint)
 			{
 				_modelGenerator.Generate(item);
-				var fileName = _sqlGenerator.GenerateEndpoint(item, appElem);
+				var fileName = _sqlGenerator.GenerateEndpoint(item);
+				_sqlGenerator.GenerateUi(item);
 				sqlJsonElem.InputFiles.Add(fileName);
 			}
-			_sqlGenerator.GenerateStruct(item, appElem);
+			_sqlGenerator.GenerateStruct(item);
 		}
 		_sqlGenerator.Finish();
 		var sqlJsonArray = new List<SqlJson>()
