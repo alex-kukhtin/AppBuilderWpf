@@ -35,7 +35,7 @@ public class SqlTables
 		{
 			IdentifierType = IdentifierType.BigInt
 		};
-		sqlGen.GenerateStruct(td, root);
+		sqlGen.GenerateStruct(td);
 		sqlGen.Finish();
 
 	}

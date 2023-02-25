@@ -48,6 +48,18 @@ public class TableNode : BaseNode
 		return f;
 	}
 
+	private FieldNode? _selectedField;
+	[JsonIgnore]
+	public FieldNode? SelectedField
+	{
+		get { return _selectedField; }
+		set
+		{
+			_selectedField = value;
+			OnPropertyChanged();
+		}
+	}
+
 	[JsonIgnore]
 	public override IEnumerable<BaseNode>? Children => Details;
 

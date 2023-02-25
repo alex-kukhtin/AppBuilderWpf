@@ -10,6 +10,7 @@
 		<ResourceDictionary>
 			<local:FieldTypeToVisibilityConverter x:Key="FieldTypeToVisibilityConverter" />
 			<local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+			<local:PointerToVisibilityConverter x:Key="PointerToVisibilityConverter" />
 		</ResourceDictionary>
 	</UserControl.Resources>
 	<StackPanel>
@@ -111,6 +112,62 @@
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>
 			</StackPanel>
+		</Expander>
+		<Expander Header="Fields2" IsExpanded="True" Margin="0,20,0,0">
+			<Grid Margin="10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="200"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="100"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<ListView Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Fields}"
+						  SelectionChanged="ListView_SelectionChanged">
+					<ListView.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Grid.Column="1" Text="{Binding Name}" Margin="3" Padding="3" />
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+				<StackPanel Grid.Row="0" Grid.Column="1" DataContext="{Binding SelectedField}"
+						Visibility="{Binding Converter={StaticResource PointerToVisibilityConverter}}"
+							Orientation="Vertical">
+					<StackPanel Orientation="Horizontal">
+						<Label Width="70" HorizontalContentAlignment="Right" Margin="3" Padding="3">Name</Label>
+						<TextBox Width="300" Text="{Binding Name}" Margin="3" Padding="3"
+							IsEnabled="{Binding IsEnabled}"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<Label Width="70">Title</Label>
+						<TextBox Width="300" Text="{Binding Title}" Margin="3" Padding="3"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<Label Width="70">Type</Label>
+						<ComboBox Width="300" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:FieldType}}}"
+							SelectedValue="{Binding Type}" Margin="3" Padding="6,4"
+							IsEnabled="{Binding IsEnabled}"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<Label Width="70">Required</Label>
+						<CheckBox IsChecked="{Binding Required}"
+							HorizontalAlignment="Left" VerticalAlignment="Center"
+							IsEnabled="{Binding IsEnabled}" Margin="3" Padding="3"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='String'}">
+						<Label Width="70">Length</Label>
+						<TextBox Width="150" Text="{Binding Length}" Margin="3" Padding="3" TextAlignment="Right"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal"
+							Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='Reference'}">
+						<Label Width="70" Padding="3">Reference</Label>
+						<ComboBox Width="300" SelectedValue="{Binding RefTable}" 								  
+							ItemsSource="{Binding RefTables, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+							Margin="3" Padding="6,4" />
+					</StackPanel>
+				</StackPanel>
+			</Grid>
 		</Expander>
 	</StackPanel>
 </UserControl>

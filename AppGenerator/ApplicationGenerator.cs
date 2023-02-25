@@ -1,14 +1,12 @@
 ﻿
-using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Collections.Generic;
 
-using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 
 using AppGenerator.Interfaces;
-using System.Data.SqlTypes;
-using System.Collections.Generic;
 
 namespace AppGenerator;
 
@@ -69,5 +67,5 @@ public class ApplicationGenerator
 			sqlJsonElem
 		};
 		_modelWriter.WriteFile(JsonConvert.SerializeObject(sqlJsonArray, JsonHelpers.DefaultSettings), "", "sql.json");
-}
+	}
 }

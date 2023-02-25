@@ -7,10 +7,24 @@
 21. DocDetails Default Fields
 22. Validate model
 23. Call Generator from AppBuilderWpf
-24.
+24. Localization files
+25. Menu icon?
+26. 
 
 SQL builder
 	2. Primary key
 	4. Default for Void (?)
 	7. Generate _ui.sql
 	8. Add struct.sql, ui.sql
+
+50. model.json -> Catalog->cat, Document->Doc
+51. Index.xaml -> Reload, Delete
+52. 
+
+
+Table Panel
+61. Global Styles for pane
+62. MoveUp/MoveDown/Delete from toolbar
+63. Field UI: Visible in list / Editable / Sortable
+64. Property Groups
+65. 

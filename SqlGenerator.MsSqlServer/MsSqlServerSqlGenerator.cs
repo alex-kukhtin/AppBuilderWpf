@@ -124,12 +124,11 @@ go
 		_modelWriter.WriteFile(GenerateUIScript(), "_sql", "_ui.sql");
 	}
 
-	private StringBuilder GetResource(String name)
+	private static StringBuilder GetResource(String name)
 	{
 		var ass = Assembly.GetAssembly(typeof(MsSqlServerSqlGenerator));
-		var stream = ass?.GetManifestResourceStream(name);
-		if (stream == null)
-			throw new InvalidOperationException($"Resource not found: {name}");
+		var stream = (ass?.GetManifestResourceStream(name)) 
+			?? throw new InvalidOperationException($"Resource not found: {name}");
 		using var sr = new StreamReader(stream);
 		return new StringBuilder(sr.ReadToEnd());
 	}
@@ -146,9 +145,9 @@ go
 		foreach (var ui in _uiElements)
 		{
 			if (ui.Schema == "Catalog")
-				fieldList.Add($"\t\t({++id_catalog},\t10,\tN'{ui.Table.Title ?? ui.Table.Name}',\tN'{ui.Table.Name.ToLowerInvariant()!}',\t{order_catalog += 10})");
+				fieldList.Add($"\t\t({++id_catalog},\t10,\tN'{ui.Table.Title ?? ui.Table.Name}',\tN'{ui.Table.Name?.ToLowerInvariant()!}',\t{order_catalog += 10})");
 			else if (ui.Schema == "Document")
-				fieldList.Add($"\t\t({++id_document},\t20,\tN'{ui.Table.Title ?? ui.Table.Name}',\tN'{ui.Table.Name.ToLowerInvariant()!}',\t{order_document += 10})");
+				fieldList.Add($"\t\t({++id_document},\t20,\tN'{ui.Table.Title ?? ui.Table.Name}',\tN'{ui.Table.Name?.ToLowerInvariant()!}',\t{order_document += 10})");
 		}
 		var fields = String.Join(",\n", fieldList) + ";";
 		sqlRes.Replace("$(MenuItems)", fields);

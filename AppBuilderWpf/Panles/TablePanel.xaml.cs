@@ -58,4 +58,9 @@ public partial class TablePanel : UserControl
 			return;
 		_table.Fields.Move(pos, pos + 1);
 	}
+
+	private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		_table.SelectedField = e.AddedItems?[0] as FieldNode;
+	}
 }

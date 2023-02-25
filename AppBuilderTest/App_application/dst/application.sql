@@ -1,6 +1,6 @@
 ﻿/*
 version: 1.0.0
-generated: 04.01.2023 12:18:34
+generated: 04.01.2023 12:28:41
 */
 
 
@@ -166,9 +166,9 @@ begin
 		(1,		null,	N'Root', null, 0),
 		(10,	1,	N'@[Catalogs]' ,  N'catalog', 10),
 		(20,	1,	N'@[Documents]' , N'document', 10),
-		(101,	10,	N'Unit',	N'catalog',	20),
-		(102,	10,	N'@[Products]',	N'catalog',	30),
-		(103,	10,	N'@[Agents]',	N'catalog',	40),
+		(101,	10,	N'Unit',	N'unit',	20),
+		(102,	10,	N'@[Products]',	N'product',	30),
+		(103,	10,	N'@[Agents]',	N'agent',	40),
 		(201,	20,	N'@[Documents]',	N'document',	20);
 		
 
