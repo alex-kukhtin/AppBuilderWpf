@@ -74,9 +74,22 @@ public class FieldNode : BaseNode
 	[JsonProperty(Order = 7)]
 	public String? Default { get; set; }
 
+	private Boolean _visible;
+	[JsonProperty(Order = 8)]
+	public Boolean Visible
+	{
+		get => _visible; 
+		set { _visible = value; OnPropertyChanged(); }
+	}
+
+	private Boolean _sort;
+	[JsonProperty(Order = 9)]
+	public Boolean Sort { 
+		get => _sort;
+		set { _sort = value; OnPropertyChanged(); }
+	}
 
 	[JsonIgnore]
-
 	public Boolean IsEnabled => !System;
 
 	[JsonIgnore]

@@ -166,6 +166,16 @@
 							ItemsSource="{Binding RefTables, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
 							Margin="3" Padding="6,4" />
 					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<Label Width="70">Visible</Label>
+						<CheckBox IsChecked="{Binding Visible}"
+							HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3" Padding="3"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<Label Width="70">Sort</Label>
+						<CheckBox IsChecked="{Binding Sort}"
+							HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3" Padding="3"/>
+					</StackPanel>
 				</StackPanel>
 			</Grid>
 		</Expander>
