@@ -68,12 +68,11 @@ public class ModelGenerator
 		sb.Replace("$(ModelName)", descr.Table.Name);
 	}
 
-	private StringBuilder GetResource(String name)
+	private static StringBuilder GetResource(String name)
 	{
 		var ass = Assembly.GetAssembly(typeof(ApplicationGenerator));
-		var stream = ass?.GetManifestResourceStream(name);
-		if (stream == null)
-			throw new InvalidOperationException($"Resource not found: {name}");
+		var stream = ass?.GetManifestResourceStream(name)
+			?? throw new InvalidOperationException($"Resource not found: {name}");
 		using var sr = new StreamReader(stream);
 		return new StringBuilder(sr.ReadToEnd());	
 	}

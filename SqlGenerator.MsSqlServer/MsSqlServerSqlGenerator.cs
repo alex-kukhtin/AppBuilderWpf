@@ -1,12 +1,15 @@
-﻿// Copyright © 2022 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
 
+using System;
 using System.Text;
+using System.Reflection;
+using System.Collections.Generic;
+using System.IO;
 
 using Microsoft.Extensions.Logging;
 
 using AppGenerator;
 using AppGenerator.Interfaces;
-using System.Reflection;
 
 namespace SqlGenerator.MsSqlServer;
 
@@ -77,6 +80,7 @@ public class MsSqlServerSqlGenerator : ISqlGenerator
 	{
 		if (String.IsNullOrEmpty(descr.Path))
 			return String.Empty;
+		_logger.LogInformation("Generate endpoint: {tableName}", descr.Table.Name);
 		return new EndpointGenerator(_modelWriter, descr, _appElem).Generate();
 	}
 
@@ -118,9 +122,11 @@ go
 			}
 		}
 		var content = sb.ToString();
+		_logger.LogInformation("Write file: _struct.sql");
 		_modelWriter.WriteFile(content, "_sql", "_struct.sql");
 
-		
+
+		_logger.LogInformation("Write file: _ui.sql");
 		_modelWriter.WriteFile(GenerateUIScript(), "_sql", "_ui.sql");
 	}
 
@@ -158,7 +164,7 @@ go
 	{
 		String sequence = $@"{DIVIDER}
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA = N'{descr.Schema.SchemaName()}' and SEQUENCE_NAME = N'SQ_{descr.Table.TableName}')
-	create sequence {descr.Schema.SchemaName()}.SQ_{descr.Table.TableName} as bigint start with 100 increment by 1;
+	create sequence {descr.Schema.SchemaName()}.SQ_{descr.Table.TableName} as {_appElem.IdentifierType.SqlType()} start with 100 increment by 1;
 go
 ";
 
@@ -169,7 +175,7 @@ create table {descr.Schema.SchemaName()}.{descr.Table.TableName}
 ";
 
 		var sb = new StringBuilder();
-		if (_appElem.IdentifierType == IdentifierType.Integer || _appElem.IdentifierType == IdentifierType.BigInt)
+		if (_appElem.IdentifierType.HasSequence())
 			sb.Append(sequence);
 		sb.Append(header);
 		var fields = new List<String>();

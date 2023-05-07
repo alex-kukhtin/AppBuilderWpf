@@ -36,10 +36,8 @@ public class ApplicationGenerator
 		_logger.LogInformation("SolutionFile: {solutionFile}", solutionFile);
 		_solutionFile = solutionFile;
 		var json = File.ReadAllText(_solutionFile);
-		var appElem = JsonConvert.DeserializeObject<AppElem>(json, JsonHelpers.DefaultSettings);
-		if (appElem == null)
-			throw new InvalidOperationException("Invalid appliction element");
-
+		var appElem = JsonConvert.DeserializeObject<AppElem>(json, JsonHelpers.DefaultSettings) 
+			?? throw new InvalidOperationException("Invalid appliction element");
 		var list = _dirGenerator.Generate(appElem);
 		var sqlJsonElem = new SqlJson()
 		{

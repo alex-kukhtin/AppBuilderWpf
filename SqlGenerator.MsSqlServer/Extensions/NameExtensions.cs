@@ -1,5 +1,8 @@
 ﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
 
+using System;
+using System.Collections.Generic;
+
 namespace SqlGenerator.MsSqlServer;
 
 public static class NameExtensions

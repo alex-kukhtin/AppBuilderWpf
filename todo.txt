@@ -16,6 +16,8 @@ SQL builder
 	4. Default for Void (?)
 	7. Generate _ui.sql
 	8. Add struct.sql, ui.sql
+	9. Details -> RowNumber
+	10. Maps
 
 50. model.json -> Catalog->cat, Document->Doc
 51. Index.xaml -> Reload, Delete

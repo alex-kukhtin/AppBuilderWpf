@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
+
 using System;
 using System.Windows.Input;
 

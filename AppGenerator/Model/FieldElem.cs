@@ -1,4 +1,4 @@
-﻿// Copyright © 2022 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 
@@ -31,4 +31,7 @@ public class FieldElem : BaseElem
 	public Boolean Sort { get; init; }
 
 	public Boolean IsId => Name == "Id";
+	public Boolean IsVoid => Name == "Void";
+	public Boolean IsName => Name == "Name";
+	public Boolean IsReference => Type == FieldType.Reference;
 }

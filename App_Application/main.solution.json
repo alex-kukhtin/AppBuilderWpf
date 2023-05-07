@@ -89,17 +89,20 @@
         {
           "name": "Name",
           "title": "@[Name]",
-          "length": 255
+          "length": 255,
+          "sort": true
         },
         {
           "name": "Memo",
           "title": "@[Memo]",
-          "length": 255
+          "length": 255,
+          "sort": true
         },
         {
           "name": "Code",
           "title": "@[Code]",
-          "length": 50
+          "length": 50,
+          "sort": true
         }
       ]
     }
@@ -125,12 +128,14 @@
         {
           "name": "Date",
           "title": "@[Date]",
-          "type": "Date"
+          "type": "Date",
+          "sort": true
         },
         {
           "name": "No",
           "title": "@[Number]",
-          "length": 50
+          "length": 50,
+          "sort": true
         },
         {
           "name": "Memo",
@@ -164,19 +169,24 @@
             },
             {
               "name": "Product",
+              "title": "@[Product]",
               "type": "Reference",
-              "refTable": "Catalog.Product"
+              "refTable": "Catalog.Product",
+              "visible": true
             },
             {
               "name": "Qty",
+              "title": "@[Qty]",
               "type": "Float"
             },
             {
               "name": "Price",
+              "title": "@[Price]",
               "type": "Float"
             },
             {
               "name": "Sum",
+              "title": "@[Sum]",
               "type": "Money"
             }
           ]

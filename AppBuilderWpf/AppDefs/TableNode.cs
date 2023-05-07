@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+
 using Newtonsoft.Json;
 
 namespace AppBuilder;
@@ -70,6 +71,12 @@ public class TableNode : BaseNode
 		parent.RefTable = NameWithSchema;
 		parent.Required = true;
 		parent.Parent = true;
+
+		var rowNo = t.AddField(true, "RowNumber", FieldType.Integer);
+		rowNo.Required = true;
+		rowNo.RowNumber = true;
+		rowNo.Default = "1";
+
 		Details.Add(t);
 		t.IsSelected = true;
 	}

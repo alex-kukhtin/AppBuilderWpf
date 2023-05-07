@@ -89,6 +89,9 @@ public class FieldNode : BaseNode
 		set { _sort = value; OnPropertyChanged(); }
 	}
 
+	[JsonProperty(Order = 10)]
+	public Boolean RowNumber { get; set; }
+
 	[JsonIgnore]
 	public Boolean IsEnabled => !System;
 
