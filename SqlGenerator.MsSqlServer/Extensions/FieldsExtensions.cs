@@ -25,6 +25,10 @@ internal static class FieldsExtensions
 
 	public static String SqlType(this FieldElem elem, IdentifierType identType)
 	{
+		if (elem.IsVoid)
+			return "bit";
+		else if (elem.RowNumber)
+			return "int";
 		return elem.Type switch
 		{
 			FieldType.String => $"nvarchar({elem.Length})",
@@ -56,7 +60,7 @@ internal static class FieldsExtensions
 		var escname = $"{alias}.{field.Name.Escape()}";
 		return field switch
 		{
-			{ IsId: true } => $"[Id!!Id] = {escname}",
+			{ PrimaryKey: true } => $"[Id!!Id] = {escname}",
 			{ IsName: true} => $"[Name!!Name] = {escname}",
 			{ IsReference: true} => $"[{field.Name}!T{field.ReferenceItem()}!RefId] = {escname}",
 			_ => escname

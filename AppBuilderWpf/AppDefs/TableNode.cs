@@ -67,6 +67,9 @@ public class TableNode : BaseNode
 	public void AddDetails()
 	{
 		var t = new TableNode() { Name = $"Details{Details.Count + 1}" };
+
+		t.AddField(true, "Id", FieldType.Identifier);
+
 		var parent = t.AddField(true, Name!, FieldType.Reference);
 		parent.RefTable = NameWithSchema;
 		parent.Required = true;

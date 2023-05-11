@@ -46,7 +46,8 @@ internal class EndpointGenerator
 	{
 		var sb = new StringBuilder();
 
-		var procName = $"{_descr.Schema.SchemaName()}.[{_descr.Table.Name}.Index]";
+		//var procName = _descr.IndexProcName();
+
 		List<String> aliases = new();
 		var alias = _descr.SqlTableAlias(aliases);
 		aliases.Add(alias);
@@ -54,32 +55,41 @@ internal class EndpointGenerator
 			.Select(f => f.FieldNameForSelect(alias));
 
 		var propName = _descr.Table.TableName;
+		var iderType = _root.IdentifierType.SqlType();
+		var sortDescr = _descr.RealSort();
+
 		String index = $"""
 			{MsSqlServerSqlGenerator.DIVIDER}
-			create or alter procedure {procName}
+			create or alter procedure {_descr.IndexProcName()}
 			{TenantParam()}@UserId bigint,
-			@Id {_root.IdentifierType.SqlType()} = null,
+			@Id {iderType} = null,
 			@Offset int = 0,
-			@PageSize int = 20,
-			@Order nvarchar(255) = N'date', -- TODO: initial sort field
-			@Dir nvarchar(20) = N'asc' -- TODO: initial sort direction
+			@PageSize int = 20, -- TODO: PageSize?
+			@Order nvarchar(255) = N'{sortDescr.Field}',
+			@Dir nvarchar(4) = N'{sortDescr.Direction}'
 			as
 			begin
 				set nocount on;
 				set transaction isolation level read uncommitted;
 
+				declare @tmp {_descr.MapTableTypeName()}; 
+				
 				select [{propName}!T{_descr.Table.Name}!Array] = null,
 					{String.Join(", ", fields)}
 				from {_descr.SqlTableName()} {alias}
 				where {alias}.Void = 0
 				order by {alias}.Id;
-
+			""";
+		String indexEnd = $"""
 				select [!$System!] = null, [!{propName}!Offset] = @Offset, [!{propName}!PageSize] = @PageSize, 
 					[!{propName}!SortOrder] = @Order, [!{propName}!SortDir] = @Dir;
 			end
 			go
 			""";
-		sb.Append(index);
+		sb.AppendLine(index);
+		if (_descr.HasMaps())
+			sb.AppendLine($"\n\texec {_descr.MapProcName()} {InvokeTenantParam()}@UserId = @UserId, @Map = @tmp;\n");
+		sb.Append(indexEnd);
 		return sb.ToString();
 	}
 
@@ -115,15 +125,15 @@ internal class EndpointGenerator
 				from {_descr.SqlTableName()} {alias}
 				where {TenantWhere()}Id = @Id;
 			""";
-		sb.Append(load);
+		sb.AppendLine(load);
 		if (hasDetails)
 		{
 			sb.AppendLine();
-			sb.AppendLine("-- GENERATE DETAILS HERE");
+			sb.AppendLine("-- GENERATE DETAILS HERE --");
 		}
 		if (hasRefs)
 		{
-			sb.AppendLine("-- GENERATE MAPS HERE");
+			sb.AppendLine("-- GENERATE MAPS HERE --");
 		}
 		sb.Append("end\ngo");
 		return sb.ToString();
@@ -185,7 +195,7 @@ internal class EndpointGenerator
 		var procName = _descr.UpdateProcName();
 		var elem = _descr.Table.Name;
 		var iderType = _root.IdentifierType.SqlType();
-		var fields = _descr.Table.Fields.Where(f => !f.IsId && !f.IsVoid);
+		var fields = _descr.Table.Fields.Where(f => !f.PrimaryKey && !f.IsVoid);
 		var updateFields = fields.Select(f => $"t.{f.Name.Escape()} = s.{f.Name.Escape()}");
 		var insertFieldsSource = fields.Select(f => $"{f.Name.Escape()}");
 		var insertFieldsTarget = fields.Select(f => $"s.{f.Name.Escape()}");
@@ -224,10 +234,46 @@ internal class EndpointGenerator
 		return sb.ToString();
 	}
 
+	public String GenerateIndexMap()
+	{
+		var sb = new StringBuilder();
+		String start = $"""
+			{MsSqlServerSqlGenerator.DIVIDER}
+			drop procedure if exists {_descr.MapProcName()}
+			drop type if exists {_descr.MapTableTypeName()}
+			go
+			{MsSqlServerSqlGenerator.DIVIDER}
+			create type {_descr.MapTableTypeName()} as table (
+				_rowno int identity(1, 1),
+				_rowcnt int
+			)
+			go
+			""";
+		String map = $"""
+			{MsSqlServerSqlGenerator.DIVIDER}
+			create or alter procedure {_descr.MapProcName()}
+			{TenantParam()}@UserId bigint,
+			@Map {_descr.MapTableTypeName()} readonly
+			as
+			begin
+				set nocount on;
+				set transaction isolation level read uncommitted;
+			end
+			go
+			""";
+		sb.Append(start);
+		if (_descr.HasMaps())
+		{
+			sb.AppendLine();
+			sb.Append(map);
+		}
+		return sb.ToString();
+	}
 	public String Generate()
 	{
 		String fileName = $"{_descr.Table.Name!.ToLowerInvariant()}.model.sql";
-		var sb = new StringBuilder();	
+		var sb = new StringBuilder();
+		sb.AppendLine(GenerateIndexMap());
 		sb.AppendLine(GenerateIndex());
 		sb.AppendLine(GenerateLoad());
 		sb.AppendLine(GenerateDrop());

@@ -50,4 +50,13 @@ public static class StringExtensions
 			return text + "s";
 		}
 	}
+	public static String SchemaName(this String? schema)
+	{
+		return schema switch
+		{
+			"Catalog" => "cat",
+			"Document" => "doc",
+			_ => throw new NotImplementedException($"Undefined schema for '{schema}'")
+		};
+	}
 }

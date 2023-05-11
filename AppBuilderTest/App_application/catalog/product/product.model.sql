@@ -1,21 +1,45 @@
 ﻿------------------------------------------------
+drop procedure if exists cat.[Product.Map]
+drop type if exists cat.[Product.Map.TableType]
+go
+------------------------------------------------
+create type cat.[Product.Map.TableType] as table (
+	_rowno int identity(1, 1),
+	_rowcnt int
+)
+go
+------------------------------------------------
+create or alter procedure cat.[Product.Map]
+@UserId bigint,
+@Map cat.[Product.Map.TableType] readonly
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+end
+go
+------------------------------------------------
 create or alter procedure cat.[Product.Index]
 @UserId bigint,
 @Id bigint = null,
 @Offset int = 0,
-@PageSize int = 20,
-@Order nvarchar(255) = N'date', -- TODO: initial sort field
-@Dir nvarchar(20) = N'asc' -- TODO: initial sort direction
+@PageSize int = 20, -- TODO: PageSize?
+@Order nvarchar(255) = N'name',
+@Dir nvarchar(4) = N'asc'
 as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
 
+	declare @tmp cat.[Product.Map.TableType]; 
+	
 	select [Products!TProduct!Array] = null,
 		[Id!!Id] = p.Id, [Name!!Name] = p.[Name], p.SKU, [Unit!TUnit!RefId] = p.Unit, p.Memo
 	from cat.[Products] p
 	where p.Void = 0
 	order by p.Id;
+
+	exec cat.[Product.Map] @UserId = @UserId, @Map = @tmp;
 
 	select [!$System!] = null, [!Products!Offset] = @Offset, [!Products!PageSize] = @PageSize, 
 		[!Products!SortOrder] = @Order, [!Products!SortDir] = @Dir;
@@ -33,7 +57,8 @@ begin
 	select [Product!TProduct!Object] = null,
 		[Id!!Id] = p.Id, [Name!!Name] = p.[Name], p.SKU, [Unit!TUnit!RefId] = p.Unit, p.Memo
 	from cat.[Products] p
-	where Id = @Id;-- GENERATE MAPS HERE
+	where Id = @Id;
+-- GENERATE MAPS HERE --
 end
 go
 ------------------------------------------------

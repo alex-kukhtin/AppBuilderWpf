@@ -1,4 +1,4 @@
-﻿/* Document.Document edit */
+﻿/* doc.Document edit */
 
 const template: Template = {	
 }

@@ -1,4 +1,4 @@
-﻿<!--Catalog.Unit Edit -->
+﻿<!--cat.Unit Edit -->
 <Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
 		Title="{Bind Unit.Id, Format='Unit [{0}]'}">
 	<Dialog.Buttons>

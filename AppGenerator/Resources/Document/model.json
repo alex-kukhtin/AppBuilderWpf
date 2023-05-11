@@ -6,13 +6,13 @@
 			"index": true,
 			"template": "index.template",
 			"view": "index.view"
+		},
+		"edit": {
+			"template": "edit.template",
+			"view": "edit.view"
 		}
 	},
 	"dialogs": {
-		"edit": {
-			"template": "edit.template",
-			"view": "edit.dialog"
-		},
 		"browse": {
 			"index": true,
 			"template": "index.template",

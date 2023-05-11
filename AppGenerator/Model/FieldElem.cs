@@ -21,7 +21,6 @@ public enum FieldType
 
 public class FieldElem : BaseElem
 {
-	public Boolean System { get; init; }
 	public Int32 Length { get; init; }
 	public FieldType Type { get; init; }
 	public String? RefTable { get; init; }
@@ -29,9 +28,11 @@ public class FieldElem : BaseElem
 	public String? Default { get; init; }
 	public Boolean Visible { get; init; }
 	public Boolean Sort { get; init; }
-
-	public Boolean IsId => Name == "Id";
-	public Boolean IsVoid => Name == "Void";
-	public Boolean IsName => Name == "Name";
+	public Boolean Parent { get; init; }
+	public Boolean IsName { get; init; }
+	public Boolean IsVoid { get; init; }
+	public Boolean PrimaryKey { get; init; }
+	public Boolean RowNumber { get; init; }
 	public Boolean IsReference => Type == FieldType.Reference;
+	public Boolean IsNotNull => Required || PrimaryKey || IsVoid;
 }

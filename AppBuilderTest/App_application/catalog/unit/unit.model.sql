@@ -1,22 +1,33 @@
 ﻿------------------------------------------------
+drop procedure if exists cat.[Unit.Map]
+drop type if exists cat.[Unit.Map.TableType]
+go
+------------------------------------------------
+create type cat.[Unit.Map.TableType] as table (
+	_rowno int identity(1, 1),
+	_rowcnt int
+)
+go
+------------------------------------------------
 create or alter procedure cat.[Unit.Index]
 @UserId bigint,
 @Id bigint = null,
 @Offset int = 0,
-@PageSize int = 20,
-@Order nvarchar(255) = N'date', -- TODO: initial sort field
-@Dir nvarchar(20) = N'asc' -- TODO: initial sort direction
+@PageSize int = 20, -- TODO: PageSize?
+@Order nvarchar(255) = N'name',
+@Dir nvarchar(4) = N'asc'
 as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
 
+	declare @tmp cat.[Unit.Map.TableType]; 
+	
 	select [Units!TUnit!Array] = null,
 		[Id!!Id] = u.Id, [Name!!Name] = u.[Name], u.Memo
 	from cat.[Units] u
 	where u.Void = 0
 	order by u.Id;
-
 	select [!$System!] = null, [!Units!Offset] = @Offset, [!Units!PageSize] = @PageSize, 
 		[!Units!SortOrder] = @Order, [!Units!SortDir] = @Dir;
 end
@@ -33,7 +44,8 @@ begin
 	select [Unit!TUnit!Object] = null,
 		[Id!!Id] = u.Id, [Name!!Name] = u.[Name], u.Memo
 	from cat.[Units] u
-	where Id = @Id;end
+	where Id = @Id;
+end
 go
 ------------------------------------------------
 drop procedure if exists cat.[Unit.Update];

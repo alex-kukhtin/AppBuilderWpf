@@ -1,4 +1,4 @@
-﻿/* Catalog.Agent index */
+﻿/* cat.Agent index */
 
 const template: Template = {	
 }

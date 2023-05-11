@@ -1,22 +1,33 @@
 ﻿------------------------------------------------
+drop procedure if exists cat.[Agent.Map]
+drop type if exists cat.[Agent.Map.TableType]
+go
+------------------------------------------------
+create type cat.[Agent.Map.TableType] as table (
+	_rowno int identity(1, 1),
+	_rowcnt int
+)
+go
+------------------------------------------------
 create or alter procedure cat.[Agent.Index]
 @UserId bigint,
 @Id bigint = null,
 @Offset int = 0,
-@PageSize int = 20,
-@Order nvarchar(255) = N'date', -- TODO: initial sort field
-@Dir nvarchar(20) = N'asc' -- TODO: initial sort direction
+@PageSize int = 20, -- TODO: PageSize?
+@Order nvarchar(255) = N'name',
+@Dir nvarchar(4) = N'asc'
 as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
 
+	declare @tmp cat.[Agent.Map.TableType]; 
+	
 	select [Agents!TAgent!Array] = null,
 		[Id!!Id] = a.Id, [Name!!Name] = a.[Name], a.Memo, a.Code
 	from cat.[Agents] a
 	where a.Void = 0
 	order by a.Id;
-
 	select [!$System!] = null, [!Agents!Offset] = @Offset, [!Agents!PageSize] = @PageSize, 
 		[!Agents!SortOrder] = @Order, [!Agents!SortDir] = @Dir;
 end
@@ -33,7 +44,8 @@ begin
 	select [Agent!TAgent!Object] = null,
 		[Id!!Id] = a.Id, [Name!!Name] = a.[Name], a.Memo, a.Code
 	from cat.[Agents] a
-	where Id = @Id;end
+	where Id = @Id;
+end
 go
 ------------------------------------------------
 drop procedure if exists cat.[Agent.Update];

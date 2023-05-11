@@ -1,26 +1,39 @@
 {
-	"name": "TestApp",
-	"title": "Test Application",
+	"name": "FirstApp",
+	"title": "FirstApp",
+	"modules": [
+		{
+			"id": "BA8E87DA-3C0E-4337-AAD4-102755E994A6",
+			"name": "sales",
+			"title": "@[Sales]"
+		},
+		{
+			"id": "620BB44D-8031-4ACF-B675-B0C5EA081B65",
+			"name": "purchases",
+			"title": "@[Purchases]"
+		}
+	],
 	"catalogs": [
 		{
 			"name": "Unit",
+			"initialSort": {
+				"field": "name",
+				"dir": "asc"
+			},
+			"modules": [""],
 			"fields": [
 				{
 					"name": "Id",
-					"title": "#",
-					"system": true,
-					"required": true,
+					"primaryKey": true,
 					"type": "Identifier"
 				},
 				{
 					"name": "Void",
-					"system": true,
-					"required": true,
-					"type": "Boolean",
-					"default": "0"
+					"isVoid": true
 				},
 				{
 					"name": "Name",
+					"isName": true,
 					"title": "@[Name]",
 					"length": 255
 				},
@@ -37,20 +50,16 @@
 			"fields": [
 				{
 					"name": "Id",
-					"title": "#",
-					"system": true,
-					"required": true,
+					"primaryKey": true,
 					"type": "Identifier"
 				},
 				{
 					"name": "Void",
-					"system": true,
-					"required": true,
-					"type": "Boolean",
-					"default": "0"
+					"isVoid": true
 				},
 				{
 					"name": "Name",
+					"isName": true,
 					"title": "@[Name]",
 					"length": 255
 				},
@@ -77,20 +86,16 @@
 			"fields": [
 				{
 					"name": "Id",
-					"title": "#",
-					"system": true,
-					"required": true,
+					"primaryKey": true,
 					"type": "Identifier"
 				},
 				{
 					"name": "Void",
-					"system": true,
-					"required": true,
-					"type": "Boolean",
-					"default": "0"
+					"isVoid": true
 				},
 				{
 					"name": "Name",
+					"isName": true,
 					"title": "@[Name]",
 					"length": 255
 				},
@@ -111,20 +116,19 @@
 		{
 			"name": "Document",
 			"title": "@[Documents]",
+			"initialSort": {
+				"field": "date",
+				"dir": "desc"
+			},
 			"fields": [
 				{
 					"name": "Id",
-					"title": "#",
-					"system": true,
-					"required": true,
+					"primaryKey": true,
 					"type": "Identifier"
 				},
 				{
 					"name": "Void",
-					"system": true,
-					"required": true,
-					"type": "Boolean",
-					"default": "0"
+					"isVoid": true
 				},
 				{
 					"name": "Date",
@@ -154,13 +158,15 @@
 					"fields": [
 						{
 							"name": "Id",
-							"system": true,
-							"required": true,
+							"primaryKey": true,
 							"type": "Identifier"
 						},
 						{
+							"name": "RowNo",
+							"rowNumber": true
+						},
+						{
 							"name": "Document",
-							"system": true,
 							"required": true,
 							"parent": true,
 							"type": "Reference",
@@ -173,14 +179,17 @@
 						},
 						{
 							"name": "Qty",
+							"title": "@[Qty]",
 							"type": "Float"
 						},
 						{
 							"name": "Price",
+							"title": "@[Price]",
 							"type": "Float"
 						},
 						{
 							"name": "Sum",
+							"title": "@[Sum]",
 							"type": "Money"
 						}
 					]

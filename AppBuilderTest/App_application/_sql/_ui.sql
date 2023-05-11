@@ -2,9 +2,9 @@
 ------------------------------------------------
 begin
 if not exists(select * from a2sys.SysParams where [Name] = N'AppTitle')
-	insert into a2sys.SysParams ([Name], StringValue) values (N'AppTitle', N'Test Application');
+	insert into a2sys.SysParams ([Name], StringValue) values (N'AppTitle', N'FirstApp');
 else
-	update a2sys.SysParams set StringValue = N'Test Application' where [Name] = N'AppTitle';
+	update a2sys.SysParams set StringValue = N'FirstApp' where [Name] = N'AppTitle';
 end
 go
 ------------------------------------------------

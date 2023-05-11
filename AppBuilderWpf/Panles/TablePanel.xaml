@@ -63,8 +63,8 @@
 					<Label Grid.Column="1">Name</Label>
 					<Label Grid.Column="2">Title</Label>
 					<Label Grid.Column="3">Type</Label>
-					<Label Grid.Column="4">Required</Label>
-					<Label Grid.Column="5">Length</Label>
+					<Label Grid.Column="4">Length</Label>
+					<Label Grid.Column="5">Required</Label>
 					<Label Grid.Column="6">Reference</Label>
 				</Grid>
 				<ItemsControl ItemsSource="{Binding Fields}">
@@ -77,7 +77,7 @@
 									<ColumnDefinition Width="150"/>
 									<ColumnDefinition Width="90"/>
 									<ColumnDefinition Width="60"/>
-									<ColumnDefinition Width="50"/>
+									<ColumnDefinition Width="60"/>
 									<ColumnDefinition Width="180"/>
 								</Grid.ColumnDefinitions>
 								<StackPanel Grid.Column="0" Orientation="Horizontal" Margin="3">
@@ -95,10 +95,10 @@
 								<ComboBox Grid.Column="3" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:FieldType}}}"
 										SelectedValue="{Binding Type}" Margin="3" Padding="6,3"
 										IsEnabled="{Binding IsEnabled}"/>
-								<CheckBox Grid.Column="4" IsChecked="{Binding Required}" HorizontalAlignment="Center" VerticalAlignment="Center"
-										IsEnabled="{Binding IsEnabled}"/>
-								<TextBox Grid.Column="5" Text="{Binding Length}" Margin="3" Padding="3" TextAlignment="Right" 
+								<TextBox Grid.Column="4" Text="{Binding Length}" Margin="3" Padding="3" TextAlignment="Right" 
 									Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='String'}"/>
+								<CheckBox Grid.Column="5" IsChecked="{Binding Required}" HorizontalAlignment="Center" VerticalAlignment="Center"
+										IsEnabled="{Binding IsEnabled}"/>
 								<ComboBox Grid.Column="6" SelectedValue="{Binding RefTable}" 
 									ItemsSource="{Binding RefTables, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
 									Margin="3" Padding="6,3" 
@@ -133,9 +133,9 @@
 				</ListView>
 				<StackPanel Grid.Row="0" Grid.Column="1" DataContext="{Binding SelectedField}"
 						Visibility="{Binding Converter={StaticResource PointerToVisibilityConverter}}"
-							Orientation="Vertical">
+						Orientation="Vertical" Margin="15,0,0,0">
 					<StackPanel Orientation="Horizontal">
-						<Label Width="70" HorizontalContentAlignment="Right" Margin="3" Padding="3">Name</Label>
+						<Label Width="70">Name</Label>
 						<TextBox Width="300" Text="{Binding Name}" Margin="3" Padding="3"
 							IsEnabled="{Binding IsEnabled}"/>
 					</StackPanel>
@@ -149,22 +149,22 @@
 							SelectedValue="{Binding Type}" Margin="3" Padding="6,4"
 							IsEnabled="{Binding IsEnabled}"/>
 					</StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<Label Width="70">Required</Label>
-						<CheckBox IsChecked="{Binding Required}"
-							HorizontalAlignment="Left" VerticalAlignment="Center"
-							IsEnabled="{Binding IsEnabled}" Margin="3" Padding="3"/>
-					</StackPanel>
 					<StackPanel Orientation="Horizontal" Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='String'}">
 						<Label Width="70">Length</Label>
 						<TextBox Width="150" Text="{Binding Length}" Margin="3" Padding="3" TextAlignment="Right"/>
 					</StackPanel>
 					<StackPanel Orientation="Horizontal"
 							Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='Reference'}">
-						<Label Width="70" Padding="3">Reference</Label>
+						<Label Width="70">Reference</Label>
 						<ComboBox Width="300" SelectedValue="{Binding RefTable}" 								  
 							ItemsSource="{Binding RefTables, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
 							Margin="3" Padding="6,4" />
+					</StackPanel>
+					<StackPanel Orientation="Horizontal">
+						<Label Width="70">Required</Label>
+						<CheckBox IsChecked="{Binding Required}"
+							HorizontalAlignment="Left" VerticalAlignment="Center"
+							IsEnabled="{Binding IsEnabled}" Margin="3" Padding="3"/>
 					</StackPanel>
 					<StackPanel Orientation="Horizontal">
 						<Label Width="70">Visible</Label>

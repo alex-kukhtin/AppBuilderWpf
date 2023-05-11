@@ -1,4 +1,4 @@
-﻿/* Document.Document index */
+﻿/* doc.Document index */
 
 const template: Template = {	
 }

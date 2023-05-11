@@ -103,6 +103,7 @@ create table doc.DocDetails
 (
 	Id bigint not null
 		constraint DF_DocDetails_Id default (next value for doc.SQ_DocDetails),
+	RowNo int,
 	Document bigint not null
 		/* constraint FK_DocDetails_Document_Documents foreign key (Document) references doc.Documents(Id) */,
 	Product bigint

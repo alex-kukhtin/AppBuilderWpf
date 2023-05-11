@@ -1,0 +1,14 @@
+﻿<!--doc.Document Index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Padding=".5rem"
+	  Title="{Bind Document.Memo, Format='Document {0}'}">
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Save" Command="{BindCmd Save}"/>
+		</Toolbar>
+	</Page.Toolbar>
+		<Grid>
+		<Label Content="{Bind Document.Id}"></Label>
+			<TextBox 
+				Label="Memo" Value="{Bind Document.Memo}" Multiline="True" Rows="3"/>
+	</Grid>
+</Page>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -11,8 +11,8 @@
     <None Remove="Resources\Catalog\index.template.ts" />
     <None Remove="Resources\Catalog\index.view.xaml" />
     <None Remove="Resources\Catalog\model.json" />
-    <None Remove="Resources\Document\edit.dialog.xaml" />
     <None Remove="Resources\Document\edit.template.ts" />
+    <None Remove="Resources\Document\edit.view.xaml" />
     <None Remove="Resources\Document\index.template.ts" />
     <None Remove="Resources\Document\index.view.xaml" />
     <None Remove="Resources\Document\model.json" />
@@ -26,20 +26,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Catalog\edit.template.ts" />
     <EmbeddedResource Include="Resources\Catalog\index.template.ts" />
-    <EmbeddedResource Include="Resources\Catalog\index.view.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Catalog\edit.dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Catalog\index.view.xaml" />
+    <EmbeddedResource Include="Resources\Catalog\edit.dialog.xaml"/>
     <EmbeddedResource Include="Resources\Catalog\model.json" />
-    <EmbeddedResource Include="Resources\Document\index.view.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Document\edit.dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Document\index.view.xaml"/>
+    <EmbeddedResource Include="Resources\Document\edit.view.xaml"/>
     <EmbeddedResource Include="Resources\Document\edit.template.ts" />
     <EmbeddedResource Include="Resources\Document\index.template.ts" />
     <EmbeddedResource Include="Resources\Document\model.json" />

@@ -1,4 +1,4 @@
-﻿<!--Catalog.Agent Index -->
+﻿<!--cat.Agent Index -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
 	<Page.CollectionView>
 		<CollectionView ItemsSource="{Bind Agents}" RunAt="ServerUrl">

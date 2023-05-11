@@ -1,4 +1,4 @@
-﻿/* Catalog.Product edit */
+﻿/* cat.Product edit */
 
 const template: Template = {	
 }

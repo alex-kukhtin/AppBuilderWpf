@@ -1,21 +1,45 @@
 ﻿------------------------------------------------
+drop procedure if exists doc.[Document.Map]
+drop type if exists doc.[Document.Map.TableType]
+go
+------------------------------------------------
+create type doc.[Document.Map.TableType] as table (
+	_rowno int identity(1, 1),
+	_rowcnt int
+)
+go
+------------------------------------------------
+create or alter procedure doc.[Document.Map]
+@UserId bigint,
+@Map doc.[Document.Map.TableType] readonly
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+end
+go
+------------------------------------------------
 create or alter procedure doc.[Document.Index]
 @UserId bigint,
 @Id bigint = null,
 @Offset int = 0,
-@PageSize int = 20,
-@Order nvarchar(255) = N'date', -- TODO: initial sort field
-@Dir nvarchar(20) = N'asc' -- TODO: initial sort direction
+@PageSize int = 20, -- TODO: PageSize?
+@Order nvarchar(255) = N'date',
+@Dir nvarchar(4) = N'desc'
 as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
 
+	declare @tmp doc.[Document.Map.TableType]; 
+	
 	select [Documents!TDocument!Array] = null,
 		[Id!!Id] = d.Id, d.[Date], d.[No], d.Memo, [Agent!TAgent!RefId] = d.Agent
 	from doc.[Documents] d
 	where d.Void = 0
 	order by d.Id;
+
+	exec doc.[Document.Map] @UserId = @UserId, @Map = @tmp;
 
 	select [!$System!] = null, [!Documents!Offset] = @Offset, [!Documents!PageSize] = @PageSize, 
 		[!Documents!SortOrder] = @Order, [!Documents!SortDir] = @Dir;
@@ -34,8 +58,9 @@ begin
 		[Id!!Id] = d.Id, d.[Date], d.[No], d.Memo, [Agent!TAgent!RefId] = d.Agent, [DocDetails!TDocDetails!Array] = null
 	from doc.[Documents] d
 	where Id = @Id;
--- GENERATE DETAILS HERE
--- GENERATE MAPS HERE
+
+-- GENERATE DETAILS HERE --
+-- GENERATE MAPS HERE --
 end
 go
 ------------------------------------------------

@@ -51,20 +51,33 @@ public class ModelGenerator
 		var indexView = GetResource($"AppGenerator.Resources.{descr.Schema}.{fileName}");
 		ReplaceMainMacros(indexView, descr);
 		indexView.Replace("$(CollectionName)", descr.Table.Name!.Pluralize());
+		indexView.Replace("$(ElementName)", descr.Table.Name);
 		indexView.Replace("$(EditUrl)", $"/{descr.Path.ToLowerInvariant()}/edit");
 		_modelWriter.WriteFile(indexView.ToString(), descr.Path, fileName);
 
-		fileName = "edit.dialog.xaml";
-		var fileDialog = GetResource($"AppGenerator.Resources.{descr.Schema}.{fileName}");
-		ReplaceMainMacros(fileDialog, descr);
-		fileDialog.Replace("$(ElementName)", descr.Table.Name);
-		fileDialog.Replace("$(ElementTitle)", descr.Table.Title ?? descr.Table.Name);
-		_modelWriter.WriteFile(fileDialog.ToString(), descr.Path, fileName);
+		if (descr.Schema == "Catalog")
+		{
+			fileName = "edit.dialog.xaml";
+			var fileDialog = GetResource($"AppGenerator.Resources.{descr.Schema}.{fileName}");
+			ReplaceMainMacros(fileDialog, descr);
+			fileDialog.Replace("$(ElementName)", descr.Table.Name);
+			fileDialog.Replace("$(ElementTitle)", descr.Table.Title ?? descr.Table.Name);
+			_modelWriter.WriteFile(fileDialog.ToString(), descr.Path, fileName);
+		}
+		else if (descr.Schema == "Document")
+		{
+			fileName = "edit.view.xaml";
+			var fileView = GetResource($"AppGenerator.Resources.{descr.Schema}.{fileName}");
+			ReplaceMainMacros(fileView, descr);
+			fileView.Replace("$(ElementName)", descr.Table.Name);
+			fileView.Replace("$(ElementTitle)", descr.Table.Title ?? descr.Table.Name);
+			_modelWriter.WriteFile(fileView.ToString(), descr.Path, fileName);
+		}
 	}
 
 	private void ReplaceMainMacros(StringBuilder sb, TableDescriptor descr)
 	{
-		sb.Replace("$(SchemaName)", descr.Schema);
+		sb.Replace("$(SchemaName)", descr.Schema.SchemaName());
 		sb.Replace("$(ModelName)", descr.Table.Name);
 	}
 
