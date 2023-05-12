@@ -22,6 +22,15 @@ internal static class FieldsExtensions
 			throw new InvalidOperationException($"Unknown identifier type: {identifierType}")
 		};
 	}
+	public static String SqlTypeGroup(this FieldElem elem, IdentifierType identType)
+	{
+		return elem.SqlType(identType) switch
+		{
+			"int" or "bigint" => "int",
+			"date" or "datetime" => "date",
+			_ => "string"
+		};
+	}
 
 	public static String SqlType(this FieldElem elem, IdentifierType identType)
 	{

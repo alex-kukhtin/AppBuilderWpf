@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 using AppGenerator;
@@ -42,6 +43,38 @@ internal class EndpointGenerator
 		return String.Empty;
 	}
 
+	String OrderByGroup(IGrouping<String, FieldElem> group, String alias) 
+	{
+		var whenFields = group.Select(f => $"\t\t\t\twhen N'{f.Name.ToLowerInvariant()}' then {alias}.{f.Name.Escape()}");
+		var groupString = $@"
+		case when @Dir = N'asc' then
+			case @Order
+{String.Join("\n", whenFields)}
+			end
+		end asc,
+		case when @Dir = N'desc' then
+			case @Order
+{String.Join("\n", whenFields)}
+			end
+		end desc,";
+		return groupString;
+	}
+
+	String GenerateOrderByIndex(String alias)
+	{
+		var groups = _descr.Table.Fields.Where(f => f.Sort).GroupBy(f => f.SqlTypeGroup(_root.IdentifierType));
+		if (!groups.Any())
+			return $"{alias}.{_descr.PrimaryKeyName()}";
+		var sb = new StringBuilder();
+		foreach (var group in groups)
+		{
+			var grp = OrderByGroup(group, alias);
+			sb.Append(grp);
+		}
+		sb.Append($"\n\t\t{alias}.{_descr.PrimaryKeyName()}");
+		return sb.ToString();
+	}
+
 	String GenerateIndex()
 	{
 		var sb = new StringBuilder();
@@ -51,12 +84,29 @@ internal class EndpointGenerator
 		List<String> aliases = new();
 		var alias = _descr.SqlTableAlias(aliases);
 		aliases.Add(alias);
+
 		var fields = _descr.Table.Fields.Where(f => !f.IsVoid)
 			.Select(f => f.FieldNameForSelect(alias));
 
 		var propName = _descr.Table.TableName;
 		var iderType = _root.IdentifierType.SqlType();
 		var sortDescr = _descr.RealSort();
+		var pkName = _descr.PrimaryKeyName();
+		var voidName = _descr.VoidName();
+		var mapFields = _descr.Table.Fields.Where(f => f.PrimaryKey || f.IsReference)
+			.Select(f => f.Name.Escape());
+		var mapFieldsAlias = _descr.Table.Fields.Where(f => f.PrimaryKey || f.IsReference)
+			.Select(f => $"{alias}.{f.Name.Escape()}");
+
+		String searchWhere = String.Empty;
+		String frText = String.Empty;
+		if (_descr.HasSearch())
+		{
+			var searchFields = _descr.Table.Fields.Where(f => f.Search)
+				.Select(f => $"{alias}.{f.Name.Escape()} like @fr");
+			searchWhere = $" and (@fr is null or {String.Join( " or ", searchFields)})";
+			frText = "\n\n\tdeclare @fr nvarchar(255);\n\tset @fr = N'%' + @Fragment + N'%'";
+		}
 
 		String index = $"""
 			{MsSqlServerSqlGenerator.DIVIDER}
@@ -66,19 +116,31 @@ internal class EndpointGenerator
 			@Offset int = 0,
 			@PageSize int = 20, -- TODO: PageSize?
 			@Order nvarchar(255) = N'{sortDescr.Field}',
-			@Dir nvarchar(4) = N'{sortDescr.Direction}'
+			@Dir nvarchar(4) = N'{sortDescr.Direction}'{(_descr.HasSearch() ? ",\n@Fragment nvarchar(255) = null": "")}
 			as
 			begin
 				set nocount on;
 				set transaction isolation level read uncommitted;
+				
+				set @Order = lower(@Order);
+				set @Dir = lower(@Dir);{frText}
 
 				declare @tmp {_descr.MapTableTypeName()}; 
 				
-				select [{propName}!T{_descr.Table.Name}!Array] = null,
-					{String.Join(", ", fields)}
+				insert into @tmp({String.Join(", ", mapFields)}, _rowcnt)
+				select {String.Join(", ", mapFieldsAlias)},
+					count(*) over()
 				from {_descr.SqlTableName()} {alias}
-				where {alias}.Void = 0
-				order by {alias}.Id;
+				where {TenantWhere()}{alias}.{voidName} = 0{searchWhere}
+				order by {GenerateOrderByIndex(alias)}
+				offset @Offset rows fetch next @PageSize rows only
+				option (recompile);
+
+				select [{propName}!T{_descr.Table.Name}!Array] = null,
+					{String.Join(", ", fields)},
+					[!!RowCount] = _t._rowcnt			
+				from @tmp _t inner join {_descr.SqlTableName()} {alias} on _t.{pkName} = {alias}.{pkName}
+				order by _t._rowno;
 			""";
 		String indexEnd = $"""
 				select [!$System!] = null, [!{propName}!Offset] = @Offset, [!{propName}!PageSize] = @PageSize, 
@@ -89,6 +151,8 @@ internal class EndpointGenerator
 		sb.AppendLine(index);
 		if (_descr.HasMaps())
 			sb.AppendLine($"\n\texec {_descr.MapProcName()} {InvokeTenantParam()}@UserId = @UserId, @Map = @tmp;\n");
+		else
+			sb.AppendLine();
 		sb.Append(indexEnd);
 		return sb.ToString();
 	}
@@ -109,7 +173,12 @@ internal class EndpointGenerator
 			.Select(f => f.FieldNameForSelect(alias)).Union(details);
 		var hasRefs = _descr.Table.Fields.Any(f => f.IsReference);
 
+		var mapFields = _descr.Table.Fields.Where(f => f.PrimaryKey || f.IsReference)
+			.Select(f => f.Name.Escape());
+		var mapFieldsAlias = _descr.Table.Fields.Where(f => f.PrimaryKey || f.IsReference)
+			.Select(f => $"{alias}.{f.Name.Escape()}");
 
+		var pkName = _descr.PrimaryKeyName();
 		String load = $"""
 			{MsSqlServerSqlGenerator.DIVIDER}
 			create or alter procedure {procName}
@@ -120,10 +189,17 @@ internal class EndpointGenerator
 				set nocount on;
 				set transaction isolation level read uncommitted;
 
+				declare @tmp {_descr.MapTableTypeName()}; 
+				
+				insert into @tmp({String.Join(", ", mapFields)})
+				select {String.Join(", ", mapFieldsAlias)}
+				from {_descr.SqlTableName()} {alias}
+				where {TenantWhere()}{alias}.{pkName} = @Id;
+
 				select [{_descr.Table.Name}!T{_descr.Table.Name}!Object] = null,
 					{String.Join(", ", fields)}
-				from {_descr.SqlTableName()} {alias}
-				where {TenantWhere()}Id = @Id;
+				from @tmp _t inner join {_descr.SqlTableName()} {alias} on _t.{pkName} = {alias}.{pkName}
+				where {TenantWhere()}{alias}.{pkName} = @Id;
 			""";
 		sb.AppendLine(load);
 		if (hasDetails)
@@ -133,7 +209,7 @@ internal class EndpointGenerator
 		}
 		if (hasRefs)
 		{
-			sb.AppendLine("-- GENERATE MAPS HERE --");
+			sb.AppendLine($"\n\texec {_descr.MapProcName()} {InvokeTenantParam()}@UserId = @UserId, @Map = @tmp;\n");
 		}
 		sb.Append("end\ngo");
 		return sb.ToString();
@@ -234,9 +310,24 @@ internal class EndpointGenerator
 		return sb.ToString();
 	}
 
+	public String GenerateMapSelect(FieldElem field, TableDescriptor refTable, String alias)
+	{
+		var fn = field.Name.Escape();
+		var primaryKey = refTable.PrimaryKeyName();
+		var nameField = refTable.NameFieldName();
+		var template = $"""			
+			with T as (select {fn} from @Map group by {field.Name.Escape()})
+			select [!T{field.Name}!Map] = null, [Id!!Id] = {alias}.{primaryKey}, [Name!!Name] = {alias}.{nameField}
+			from T inner join {refTable.SqlTableName()} {alias} on {alias}.{primaryKey} = T.{fn};
+		""";
+		return template;
+	}
 	public String GenerateIndexMap()
 	{
 		var sb = new StringBuilder();
+
+		var mapFields = _descr.Table.Fields.Where(f => f.PrimaryKey || f.IsReference)
+			.Select(f => $"{f.Name.Escape()} {f.SqlType(_root.IdentifierType)}");
 		String start = $"""
 			{MsSqlServerSqlGenerator.DIVIDER}
 			drop procedure if exists {_descr.MapProcName()}
@@ -245,11 +336,12 @@ internal class EndpointGenerator
 			{MsSqlServerSqlGenerator.DIVIDER}
 			create type {_descr.MapTableTypeName()} as table (
 				_rowno int identity(1, 1),
-				_rowcnt int
+				_rowcnt int,
+				{String.Join(",\n\t", mapFields)}
 			)
 			go
 			""";
-		String map = $"""
+		String mapStart = $"""
 			{MsSqlServerSqlGenerator.DIVIDER}
 			create or alter procedure {_descr.MapProcName()}
 			{TenantParam()}@UserId bigint,
@@ -258,14 +350,31 @@ internal class EndpointGenerator
 			begin
 				set nocount on;
 				set transaction isolation level read uncommitted;
+
+			""";
+		String mapEnd = """
 			end
 			go
 			""";
 		sb.Append(start);
+
+		List<String> aliases = new();
+
 		if (_descr.HasMaps())
 		{
 			sb.AppendLine();
-			sb.Append(map);
+			sb.Append(mapStart);
+			foreach (var f in _descr.Table.Fields.Where(f => f.IsReference))
+			{
+				if (f.RefTable == null)
+					throw new InvalidOperationException("RefTable is null");
+				var refTable = _root.FindTableByReference(f.RefTable);
+				var alias = refTable.SqlTableAlias(aliases);
+				aliases.Add(alias);
+				sb.AppendLine();
+				sb.AppendLine(GenerateMapSelect(f, refTable, alias));
+			}
+			sb.Append(mapEnd);
 		}
 		return sb.ToString();
 	}

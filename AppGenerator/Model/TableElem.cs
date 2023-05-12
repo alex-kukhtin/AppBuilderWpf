@@ -28,4 +28,6 @@ public class TableElem : BaseElem
 	public String TableName => Name.Pluralize();
 
 	public SortDescription? InitialSort { get; init; }
+
+	public UIElem? Ui { get; init; }
 }

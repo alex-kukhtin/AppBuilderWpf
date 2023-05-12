@@ -5,7 +5,8 @@ go
 ------------------------------------------------
 create type cat.[Unit.Map.TableType] as table (
 	_rowno int identity(1, 1),
-	_rowcnt int
+	_rowcnt int,
+	Id bigint
 )
 go
 ------------------------------------------------
@@ -15,19 +16,49 @@ create or alter procedure cat.[Unit.Index]
 @Offset int = 0,
 @PageSize int = 20, -- TODO: PageSize?
 @Order nvarchar(255) = N'name',
-@Dir nvarchar(4) = N'asc'
+@Dir nvarchar(4) = N'asc',
+@Fragment nvarchar(255) = null
 as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
+	
+	set @Order = lower(@Order);
+	set @Dir = lower(@Dir);
+
+	declare @fr nvarchar(255);
+	set @fr = N'%' + @Fragment + N'%'
 
 	declare @tmp cat.[Unit.Map.TableType]; 
 	
-	select [Units!TUnit!Array] = null,
-		[Id!!Id] = u.Id, [Name!!Name] = u.[Name], u.Memo
+	insert into @tmp(Id, _rowcnt)
+	select u.Id,
+		count(*) over()
 	from cat.[Units] u
-	where u.Void = 0
-	order by u.Id;
+	where u.Void = 0 and (@fr is null or u.[Name] like @fr or u.Memo like @fr)
+	order by 
+		case when @Dir = N'asc' then
+			case @Order
+				when N'name' then u.[Name]
+				when N'memo' then u.Memo
+			end
+		end asc,
+		case when @Dir = N'desc' then
+			case @Order
+				when N'name' then u.[Name]
+				when N'memo' then u.Memo
+			end
+		end desc,
+		u.Id
+	offset @Offset rows fetch next @PageSize rows only
+	option (recompile);
+
+	select [Units!TUnit!Array] = null,
+		[Id!!Id] = u.Id, [Name!!Name] = u.[Name], u.Memo,
+		[!!RowCount] = _t._rowcnt			
+	from @tmp _t inner join cat.[Units] u on _t.Id = u.Id
+	order by _t._rowno;
+
 	select [!$System!] = null, [!Units!Offset] = @Offset, [!Units!PageSize] = @PageSize, 
 		[!Units!SortOrder] = @Order, [!Units!SortDir] = @Dir;
 end
@@ -41,10 +72,17 @@ begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
 
+	declare @tmp cat.[Unit.Map.TableType]; 
+	
+	insert into @tmp(Id)
+	select u.Id
+	from cat.[Units] u
+	where u.Id = @Id;
+
 	select [Unit!TUnit!Object] = null,
 		[Id!!Id] = u.Id, [Name!!Name] = u.[Name], u.Memo
-	from cat.[Units] u
-	where Id = @Id;
+	from @tmp _t inner join cat.[Units] u on _t.Id = u.Id
+	where u.Id = @Id;
 end
 go
 ------------------------------------------------

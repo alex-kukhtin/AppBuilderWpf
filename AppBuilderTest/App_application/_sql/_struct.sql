@@ -87,9 +87,11 @@ create table doc.Documents
 		constraint DF_Documents_Void default (0),
 	[Date] date,
 	[No] nvarchar(50),
-	Memo nvarchar(255),
+	[Sum] money not null
+		constraint DF_Documents_Sum default (0),
 	Agent bigint
 		/* constraint FK_Documents_Agent_Agents foreign key (Agent) references cat.Agents(Id) */,
+	Memo nvarchar(255),
 	constraint PK_Documents primary key (Id)
 );
 go

@@ -47,6 +47,7 @@ public class ApplicationGenerator
 		};
 		sqlJsonElem.InputFiles.Add("_sql/_struct.sql");
 		sqlJsonElem.InputFiles.Add("_sql/_ui.sql");
+		_modelGenerator.Start(appElem);
 		_sqlGenerator.Start(appElem);
 		foreach ( var item in list)
 		{

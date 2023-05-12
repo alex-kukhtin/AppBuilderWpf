@@ -53,9 +53,29 @@ internal static class TableExtensions
 		return a;
 	}
 
+	public static String PrimaryKeyName(this TableDescriptor descr)
+	{
+		return descr.Table.Fields.FirstOrDefault(f => f.PrimaryKey)?.Name?.Escape()
+			?? throw new InvalidOperationException($"There is no primary key in {descr.Table.Name}");
+	}
+	public static String NameFieldName(this TableDescriptor descr)
+	{
+		return descr.Table.Fields.FirstOrDefault(f => f.IsName)?.Name?.Escape()
+			?? throw new InvalidOperationException($"There is no name field in {descr.Table.Name}");
+	}
+
+	public static String? VoidName(this TableDescriptor descr)
+	{
+		return descr.Table.Fields.FirstOrDefault(f => f.IsVoid)?.Name?.Escape();
+	}
+
 	public static Boolean HasMaps(this TableDescriptor descr)
 	{
 		return descr.Table.Fields.Any(f => f.IsReference);
+	}
+	public static Boolean HasSearch(this TableDescriptor descr)
+	{
+		return descr.Table.Fields.Any(f => f.Search);
 	}
 
 	public static SortDescription RealSort(this TableDescriptor descr)

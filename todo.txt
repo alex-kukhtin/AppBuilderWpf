@@ -20,7 +20,7 @@ SQL builder
 	10. Maps
 	11. Default PageSize
 	12. Fetch
-	13. 
+	13. Словари локализации
 
 50. model.json -> Catalog->cat, Document->Doc
 51. Index.xaml -> Reload, Delete

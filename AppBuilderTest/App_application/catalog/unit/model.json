@@ -22,7 +22,8 @@
 	},
 	"commands": {
 		"fetch": {
-			"type": "sql"
+			"type": "sql",
+			"procedure": "Unit.Fetch"
 		}
 	}
 }

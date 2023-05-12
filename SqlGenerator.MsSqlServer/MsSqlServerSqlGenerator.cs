@@ -205,8 +205,6 @@ create table {descr.Schema.SchemaName()}.{descr.Table.TableName}
 		ForeignKey? foreignKeyResult = null;
 		if (field.Type == FieldType.Reference)
 		{
-			if (field.RefTable == null)
-				throw new InvalidOperationException($"The reference '{field.Name}' is empty");
 			var refTable = _appElem.FindTableByReference(field.RefTable);
 			var foreignKeyName = $"FK_{tableName}_{field.Name}_{refTable.Table.TableName}";
 			String pkName = _appElem.MultiTenant ? $"TenantId, {refTable.Table.PrimaryKey.Name}" : $"{refTable.Table.PrimaryKey.Name}";

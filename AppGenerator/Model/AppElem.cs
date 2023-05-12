@@ -20,8 +20,7 @@ public class AppElem : BaseElem
 	public List<CatalogElem> Catalogs { get; init; } = new();
 	public List<DocumentElem> Documents { get; init; } = new();
 
-
-	public TableDescriptor FindTableByReference(String refTable)
+	public TableDescriptor FindTableByReference(String? refTable)
 	{
 		if (String.IsNullOrEmpty(refTable))
 			throw new InvalidOperationException($"Invalid empty reference");

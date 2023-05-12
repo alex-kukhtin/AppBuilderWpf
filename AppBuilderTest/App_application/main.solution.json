@@ -34,11 +34,15 @@
 				{
 					"name": "Name",
 					"isName": true,
+					"sort": true,
+					"search": true,
 					"title": "@[Name]",
 					"length": 255
 				},
 				{
 					"name": "Memo",
+					"sort": true,
+					"search": true,
 					"title": "@[Memo]",
 					"length": 255
 				}
@@ -51,6 +55,7 @@
 				{
 					"name": "Id",
 					"primaryKey": true,
+					"sort": true,
 					"type": "Identifier"
 				},
 				{
@@ -60,11 +65,15 @@
 				{
 					"name": "Name",
 					"isName": true,
+					"search": true,
+					"sort": true,
 					"title": "@[Name]",
 					"length": 255
 				},
 				{
 					"name": "SKU",
+					"sort": true,
+					"search": true,
 					"length": 50
 				},
 				{
@@ -75,10 +84,31 @@
 				},
 				{
 					"name": "Memo",
+					"search": true,
+					"sort": true,
 					"title": "@[Memo]",
 					"length": 255
 				}
-			]
+			],
+			"ui": {
+				"list": {
+					"fields":[
+						{ "field": "Id", "sort": true, "search": "exact" },
+						{ "field": "Name", "sort": true, "search": "like" },
+						{ "field": "SKU", "sort": true, "search": "exact" },
+						{ "field": "Unit" },
+						{ "field": "Memo", "sort": "true", "search": "like"}
+					]
+				},
+				"edit": {
+					"fields": [
+						{ "field": "Name", "tabIndex": 1, "required": true },
+						{ "field": "SKU", "required": true },
+						{ "field": "Unit" },
+						{ "field": "Memo", "multiline": true }
+					]
+				}
+			}
 		},
 		{
 			"name": "Agent",
@@ -96,16 +126,22 @@
 				{
 					"name": "Name",
 					"isName": true,
+					"search": true,
+					"sort": true,
 					"title": "@[Name]",
 					"length": 255
 				},
 				{
 					"name": "Memo",
+					"search": true,
+					"sort": true,
 					"title": "@[Memo]",
 					"length": 255
 				},
 				{
 					"name": "Code",
+					"search": true,
+					"sort": true,
 					"title": "@[Code]",
 					"length": 50
 				}
@@ -132,24 +168,38 @@
 				},
 				{
 					"name": "Date",
+					"sort": "true",
 					"title": "@[Date]",
 					"type": "Date"
 				},
 				{
 					"name": "No",
+					"search": true,
+					"sort": true,
 					"title": "@[Number]",
 					"length": 50
 				},
 				{
-					"name": "Memo",
-					"title": "@[Memo]",
-					"length": 255
+					"name": "Sum",
+					"search": true,
+					"type": "Money",
+					"sort": true,
+					"required": true,
+					"default": 0,
+					"title": "@[Sum]"
 				},
 				{
 					"name": "Agent",
 					"title": "@[Agent]",
+					"filter": true,
 					"type": "Reference",
 					"refTable": "Catalog.Agent"
+				},
+				{
+					"name": "Memo",
+					"search": "true",
+					"title": "@[Memo]",
+					"length": 255
 				}
 			],
 			"details": [

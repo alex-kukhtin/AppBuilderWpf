@@ -5,7 +5,9 @@ go
 ------------------------------------------------
 create type cat.[Product.Map.TableType] as table (
 	_rowno int identity(1, 1),
-	_rowcnt int
+	_rowcnt int,
+	Id bigint,
+	Unit bigint
 )
 go
 ------------------------------------------------
@@ -16,6 +18,10 @@ as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
+
+	with T as (select Unit from @Map group by Unit)
+	select [!TUnit!Map] = null, [Id!!Id] = u.Id, [Name!!Name] = u.[Name]
+	from T inner join cat.[Units] u on u.Id = T.Unit;
 end
 go
 ------------------------------------------------
@@ -25,19 +31,60 @@ create or alter procedure cat.[Product.Index]
 @Offset int = 0,
 @PageSize int = 20, -- TODO: PageSize?
 @Order nvarchar(255) = N'name',
-@Dir nvarchar(4) = N'asc'
+@Dir nvarchar(4) = N'asc',
+@Fragment nvarchar(255) = null
 as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
+	
+	set @Order = lower(@Order);
+	set @Dir = lower(@Dir);
+
+	declare @fr nvarchar(255);
+	set @fr = N'%' + @Fragment + N'%'
 
 	declare @tmp cat.[Product.Map.TableType]; 
 	
-	select [Products!TProduct!Array] = null,
-		[Id!!Id] = p.Id, [Name!!Name] = p.[Name], p.SKU, [Unit!TUnit!RefId] = p.Unit, p.Memo
+	insert into @tmp(Id, Unit, _rowcnt)
+	select p.Id, p.Unit,
+		count(*) over()
 	from cat.[Products] p
-	where p.Void = 0
-	order by p.Id;
+	where p.Void = 0 and (@fr is null or p.[Name] like @fr or p.SKU like @fr or p.Memo like @fr)
+	order by 
+		case when @Dir = N'asc' then
+			case @Order
+				when N'id' then p.Id
+			end
+		end asc,
+		case when @Dir = N'desc' then
+			case @Order
+				when N'id' then p.Id
+			end
+		end desc,
+		case when @Dir = N'asc' then
+			case @Order
+				when N'name' then p.[Name]
+				when N'sku' then p.SKU
+				when N'memo' then p.Memo
+			end
+		end asc,
+		case when @Dir = N'desc' then
+			case @Order
+				when N'name' then p.[Name]
+				when N'sku' then p.SKU
+				when N'memo' then p.Memo
+			end
+		end desc,
+		p.Id
+	offset @Offset rows fetch next @PageSize rows only
+	option (recompile);
+
+	select [Products!TProduct!Array] = null,
+		[Id!!Id] = p.Id, [Name!!Name] = p.[Name], p.SKU, [Unit!TUnit!RefId] = p.Unit, p.Memo,
+		[!!RowCount] = _t._rowcnt			
+	from @tmp _t inner join cat.[Products] p on _t.Id = p.Id
+	order by _t._rowno;
 
 	exec cat.[Product.Map] @UserId = @UserId, @Map = @tmp;
 
@@ -54,11 +101,20 @@ begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
 
+	declare @tmp cat.[Product.Map.TableType]; 
+	
+	insert into @tmp(Id, Unit)
+	select p.Id, p.Unit
+	from cat.[Products] p
+	where p.Id = @Id;
+
 	select [Product!TProduct!Object] = null,
 		[Id!!Id] = p.Id, [Name!!Name] = p.[Name], p.SKU, [Unit!TUnit!RefId] = p.Unit, p.Memo
-	from cat.[Products] p
-	where Id = @Id;
--- GENERATE MAPS HERE --
+	from @tmp _t inner join cat.[Products] p on _t.Id = p.Id
+	where p.Id = @Id;
+
+	exec cat.[Product.Map] @UserId = @UserId, @Map = @tmp;
+
 end
 go
 ------------------------------------------------

@@ -1,0 +1,29 @@
+﻿<!--GENERATED -->
+<!--Catalog.Agent Browse -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
+		Title="Browse">
+	<Dialog.CollectionView>
+		<CollectionView ItemsSource="{Bind Agents}" RunAt="Server">
+			
+		</CollectionView>
+	</Dialog.CollectionView>	
+	<Dialog.Buttons>
+		<Button Content="@[Select]" Command="{BindCmd Select, Argument={Bind Agents}" Style="Primary"/>
+		<Button Content="@[Cancel]" Command="{BindCmd Close}"/>
+	</Dialog.Buttons>
+	<Grid>
+		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" FixedHeader="True"
+				  DoubleClick="{BindCmd Select, Argument={Bind Agents}}">
+			<DataGridColumn Header="#" Content="{Bind Id}" Role="Id"/>
+			<DataGridColumn Header="@[Name]" Content="{Bind Name}" />
+			<DataGridColumn Header="@[Memo]" Content="{Bind Memo}" />
+			<DataGridColumn Fit="True" Wrap="NoWrap">
+				<CommandBar Visibility="Hover">
+					<Button Icon="Edit" 
+							Command="{BindCmd Dialog, Action=Edit, Argument={Bind}, Url='/catalog/agent/edit'}"/>
+				</CommandBar>
+			</DataGridColumn>
+		</DataGrid>
+	</Grid>
+</Dialog>
+

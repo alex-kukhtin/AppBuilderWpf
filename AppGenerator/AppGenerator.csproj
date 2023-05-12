@@ -1,39 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<LangVersion>11</LangVersion>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Resources\Catalog\edit.dialog.xaml" />
-    <None Remove="Resources\Catalog\edit.template.ts" />
-    <None Remove="Resources\Catalog\index.template.ts" />
-    <None Remove="Resources\Catalog\index.view.xaml" />
-    <None Remove="Resources\Catalog\model.json" />
-    <None Remove="Resources\Document\edit.template.ts" />
-    <None Remove="Resources\Document\edit.view.xaml" />
-    <None Remove="Resources\Document\index.template.ts" />
-    <None Remove="Resources\Document\index.view.xaml" />
-    <None Remove="Resources\Document\model.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Catalog\edit.template.ts" />
-    <EmbeddedResource Include="Resources\Catalog\index.template.ts" />
-    <EmbeddedResource Include="Resources\Catalog\index.view.xaml" />
-    <EmbeddedResource Include="Resources\Catalog\edit.dialog.xaml"/>
-    <EmbeddedResource Include="Resources\Catalog\model.json" />
-    <EmbeddedResource Include="Resources\Document\index.view.xaml"/>
-    <EmbeddedResource Include="Resources\Document\edit.view.xaml"/>
-    <EmbeddedResource Include="Resources\Document\edit.template.ts" />
-    <EmbeddedResource Include="Resources\Document\index.template.ts" />
-    <EmbeddedResource Include="Resources\Document\model.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Resources\Catalog\browse.dialog.xaml"/>
+		<EmbeddedResource Include="Resources\Catalog\edit.template.ts" />
+		<EmbeddedResource Include="Resources\Catalog\index.template.ts" />
+		<EmbeddedResource Include="Resources\Catalog\index.view.xaml" />
+		<EmbeddedResource Include="Resources\Catalog\edit.dialog.xaml" />
+		<EmbeddedResource Include="Resources\Catalog\model.json" />
+		<EmbeddedResource Include="Resources\Document\index.view.xaml" />
+		<EmbeddedResource Include="Resources\Document\edit.view.xaml" />
+		<EmbeddedResource Include="Resources\Document\edit.template.ts" />
+		<EmbeddedResource Include="Resources\Document\index.template.ts" />
+		<EmbeddedResource Include="Resources\Document\model.json" />
+	</ItemGroup>
 
 </Project>

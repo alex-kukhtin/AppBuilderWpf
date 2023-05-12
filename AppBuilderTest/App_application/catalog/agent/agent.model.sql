@@ -5,7 +5,8 @@ go
 ------------------------------------------------
 create type cat.[Agent.Map.TableType] as table (
 	_rowno int identity(1, 1),
-	_rowcnt int
+	_rowcnt int,
+	Id bigint
 )
 go
 ------------------------------------------------
@@ -15,19 +16,51 @@ create or alter procedure cat.[Agent.Index]
 @Offset int = 0,
 @PageSize int = 20, -- TODO: PageSize?
 @Order nvarchar(255) = N'name',
-@Dir nvarchar(4) = N'asc'
+@Dir nvarchar(4) = N'asc',
+@Fragment nvarchar(255) = null
 as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
+	
+	set @Order = lower(@Order);
+	set @Dir = lower(@Dir);
+
+	declare @fr nvarchar(255);
+	set @fr = N'%' + @Fragment + N'%'
 
 	declare @tmp cat.[Agent.Map.TableType]; 
 	
-	select [Agents!TAgent!Array] = null,
-		[Id!!Id] = a.Id, [Name!!Name] = a.[Name], a.Memo, a.Code
+	insert into @tmp(Id, _rowcnt)
+	select a.Id,
+		count(*) over()
 	from cat.[Agents] a
-	where a.Void = 0
-	order by a.Id;
+	where a.Void = 0 and (@fr is null or a.[Name] like @fr or a.Memo like @fr or a.Code like @fr)
+	order by 
+		case when @Dir = N'asc' then
+			case @Order
+				when N'name' then a.[Name]
+				when N'memo' then a.Memo
+				when N'code' then a.Code
+			end
+		end asc,
+		case when @Dir = N'desc' then
+			case @Order
+				when N'name' then a.[Name]
+				when N'memo' then a.Memo
+				when N'code' then a.Code
+			end
+		end desc,
+		a.Id
+	offset @Offset rows fetch next @PageSize rows only
+	option (recompile);
+
+	select [Agents!TAgent!Array] = null,
+		[Id!!Id] = a.Id, [Name!!Name] = a.[Name], a.Memo, a.Code,
+		[!!RowCount] = _t._rowcnt			
+	from @tmp _t inner join cat.[Agents] a on _t.Id = a.Id
+	order by _t._rowno;
+
 	select [!$System!] = null, [!Agents!Offset] = @Offset, [!Agents!PageSize] = @PageSize, 
 		[!Agents!SortOrder] = @Order, [!Agents!SortDir] = @Dir;
 end
@@ -41,10 +74,17 @@ begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
 
+	declare @tmp cat.[Agent.Map.TableType]; 
+	
+	insert into @tmp(Id)
+	select a.Id
+	from cat.[Agents] a
+	where a.Id = @Id;
+
 	select [Agent!TAgent!Object] = null,
 		[Id!!Id] = a.Id, [Name!!Name] = a.[Name], a.Memo, a.Code
-	from cat.[Agents] a
-	where Id = @Id;
+	from @tmp _t inner join cat.[Agents] a on _t.Id = a.Id
+	where a.Id = @Id;
 end
 go
 ------------------------------------------------

@@ -26,8 +26,8 @@ public class FieldElem : BaseElem
 	public String? RefTable { get; init; }
 	public Boolean Required { get; init; }
 	public String? Default { get; init; }
-	public Boolean Visible { get; init; }
 	public Boolean Sort { get; init; }
+	public Boolean Search { get; init; }
 	public Boolean Parent { get; init; }
 	public Boolean IsName { get; init; }
 	public Boolean IsVoid { get; init; }

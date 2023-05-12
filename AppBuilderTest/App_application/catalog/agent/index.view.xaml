@@ -1,7 +1,8 @@
-﻿<!--cat.Agent Index -->
+﻿<!--GENERATED -->
+<!--cat.Agent Index -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
 	<Page.CollectionView>
-		<CollectionView ItemsSource="{Bind Agents}" RunAt="ServerUrl">
+		<CollectionView ItemsSource="{Bind Agents}" RunAt="Server">
 			<CollectionView.Filter>
 				<FilterDescription>
 					<FilterItem Property="Fragment" DataType="String"/>
@@ -15,16 +16,21 @@
 					Command="{BindCmd Dialog, Action=Append, Argument={Bind Agents}, Url='/catalog/agent/edit'}"/>
 			<Button Icon="Edit"
 				Command="{BindCmd Dialog, Action=EditSelected, Argument={Bind Agents}, Url='/catalog/agent/edit'}"/>
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}"/>
+			<ToolbarAligner />
+			<TextBox Value="{Bind Parent.Filter.Fragment}" Placeholder="@[Search]" ShowFilter="True" ShowClear="True"/>
 		</Toolbar>
 		<DataGrid Grid.Row="2"  ItemsSource="{Bind Parent.ItemsSource}" FixedHeader="True"
+				  Sort="True"
 				  DoubleClick="{BindCmd Dialog, Action=EditSelected, Argument={Bind Agents}, Url='/catalog/agent/edit'}">
-			<DataGridColumn Header="#" Content="{Bind Id}" Role="Id"/>
-			<DataGridColumn Header="@[Name]" Content="{Bind Name}" />
-			<DataGridColumn Header="@[Memo]" Content="{Bind Memo}" />
-			<DataGridColumn Fit="True" Wrap="NoWrap">
+			<DataGridColumn Header="@[Name]" Content="{Bind Name}"/>
+			<DataGridColumn Fit="True" Wrap="NoWrap" Sort="False">
 				<CommandBar Visibility="Hover">
 					<Button Icon="Edit" 
 							Command="{BindCmd Dialog, Action=Edit, Argument={Bind}, Url='/catalog/agent/edit'}"/>
+					<Button Icon="Clear" 
+							Command="{BindCmd DbRemove, Argument={Bind}, Confirm='@[Confrm.DeleteElement]'}"/>
 				</CommandBar>
 			</DataGridColumn>
 		</DataGrid>
