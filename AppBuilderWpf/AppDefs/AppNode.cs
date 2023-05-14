@@ -54,5 +54,25 @@ public class AppNode : BaseNode
 		Documents.Add(d);
 		d.IsSelected = true;
 	}
+
+	internal override void OnInit()
+	{
+		if (Catalogs != null)
+		{
+			foreach (var c in Catalogs)
+			{
+				c.SetParent(this);
+				c.OnInit();
+			}
+		}
+		if (Documents != null)
+		{
+			foreach (var d in Documents)
+			{
+				d.SetParent(this);
+				d.OnInit();
+			}
+		}
+	}
 }
 

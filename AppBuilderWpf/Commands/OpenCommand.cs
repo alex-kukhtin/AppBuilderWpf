@@ -40,6 +40,7 @@ public class OpenCommand : ICommand
 		{
 			var json = File.ReadAllText(of.FileName);
 			var appNode = JsonConvert.DeserializeObject<AppNode>(json, JsonHelpers.DefaultSettings);
+			appNode.OnInit();
 			if (appNode == null)
 				throw new InvalidOperationException("Invalid solution file");
 			_viewModel.Open(appNode, of.FileName);

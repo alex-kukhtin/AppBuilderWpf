@@ -15,7 +15,7 @@ public class CatalogsNode : BaseNode
 		Name = "Catalogs";
 		_catalogs = catalogs;
 	}
-	public override IEnumerable<BaseNode>? Children => _catalogs;
+	public override IEnumerable<TableNode>? Children => _catalogs;
 
 }
 public class CatalogNode : TableNode

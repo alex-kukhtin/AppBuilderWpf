@@ -15,7 +15,7 @@ public class DocumentsNode : BaseNode
 		Name = "Documents";
 		_documents = documents;
 	}
-	public override IEnumerable<BaseNode>? Children => _documents;
+	public override IEnumerable<TableNode>? Children => _documents;
 
 }
 public class DocumentNode : TableNode

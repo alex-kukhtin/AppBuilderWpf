@@ -23,10 +23,22 @@ public class TableNode : BaseNode
 	[JsonProperty(Order = 2)]
 	public ObservableCollection<FieldNode> Fields { get; set; } = new();
 
+	private String? _nameInParent;
 	[JsonProperty(Order = 3)]
-	public ObservableCollection<TableNode> Details { get; set; } = new();
+	public String? NameInParent
+	{
+		get => _nameInParent;
+		set { _nameInParent = value; OnPropertyChanged(); }
+	}
 
+	[JsonProperty(Order = 4)]
+	public ObservableCollection<TableNode> Details { get; set; } = new();
 	public Boolean ShouldSerializeDetails() => Details != null && Details.Count > 0;
+
+	[JsonProperty(Order = 5)]
+	public UiNode Ui { get; set; } = new();
+
+	public Boolean ShouldSerializeUi() => Ui != null && !Ui.IsEmpty;
 
 	[JsonIgnore]
 	public override String Image => "/Images/table.png";
@@ -68,16 +80,16 @@ public class TableNode : BaseNode
 	{
 		var t = new TableNode() { Name = $"Details{Details.Count + 1}" };
 
-		t.AddField(true, "Id", FieldType.Identifier);
+		var id = t.AddField(true, "Id", FieldType.Identifier);
+		id.Role = FieldRole.PrimaryKey;
 
 		var parent = t.AddField(true, Name!, FieldType.Reference);
 		parent.RefTable = NameWithSchema;
 		parent.Required = true;
-		parent.Parent = true;
 
 		var rowNo = t.AddField(true, "RowNumber", FieldType.Integer);
 		rowNo.Required = true;
-		rowNo.RowNumber = true;
+		rowNo.Role = FieldRole.RowNumber;
 		rowNo.Default = "1";
 
 		Details.Add(t);
@@ -88,11 +100,26 @@ public class TableNode : BaseNode
 	{
 		foreach (var d in Details)
 		{
-			foreach (var f in d.Fields.Where(f => f.Parent))
+			foreach (var f in d.Fields.Where(f => f.Role == FieldRole.Parent))
 			{
 				f.RefTable = NameWithSchema;
 				f.Name = Name;
 			}
 		}
+	}
+	internal void SetParent(AppNode parent)
+	{
+
+	}
+
+	internal override void OnInit()
+	{
+		base.OnInit();
+		foreach (var f in Fields)
+		{
+			f.SetParent(this);
+			f.OnInit();
+		}
+		Ui?.SetParent(this);
 	}
 }

@@ -36,7 +36,7 @@
 				<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Title}" Margin="5" Padding="3"/>
 				<Label Grid.Row="2" Grid.Column="0">Description</Label>
 				<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Description}" Margin="5" Padding="3"
-			TextWrapping="Wrap" AcceptsReturn="True" Height="75" VerticalScrollBarVisibility="Visible"/>
+				TextWrapping="Wrap" AcceptsReturn="True" Height="75" VerticalScrollBarVisibility="Visible"/>
 
 			</Grid>
 		</Expander>
@@ -54,18 +54,22 @@
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="83"/>
 						<ColumnDefinition Width="100"/>
-						<ColumnDefinition Width="150"/>
+						<ColumnDefinition Width="100"/>
+						<ColumnDefinition Width="100"/>
 						<ColumnDefinition Width="90"/>
-						<ColumnDefinition Width="60"/>
-						<ColumnDefinition Width="50"/>
+						<ColumnDefinition Width="65"/>
 						<ColumnDefinition Width="180"/>
+						<ColumnDefinition Width="65"/>
+						<ColumnDefinition Width="100"/>
 					</Grid.ColumnDefinitions>
 					<Label Grid.Column="1">Name</Label>
 					<Label Grid.Column="2">Title</Label>
-					<Label Grid.Column="3">Type</Label>
-					<Label Grid.Column="4">Length</Label>
-					<Label Grid.Column="5">Required</Label>
+					<Label Grid.Column="3">Role</Label>
+					<Label Grid.Column="4">Type</Label>
+					<Label Grid.Column="5">Length</Label>
 					<Label Grid.Column="6">Reference</Label>
+					<Label Grid.Column="7">Required</Label>
+					<Label Grid.Column="8">Default</Label>
 				</Grid>
 				<ItemsControl ItemsSource="{Binding Fields}">
 					<ItemsControl.ItemTemplate>
@@ -74,110 +78,97 @@
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="83"/>
 									<ColumnDefinition Width="100"/>
-									<ColumnDefinition Width="150"/>
+									<ColumnDefinition Width="100"/>
+									<ColumnDefinition Width="100"/>
 									<ColumnDefinition Width="90"/>
-									<ColumnDefinition Width="60"/>
-									<ColumnDefinition Width="60"/>
+									<ColumnDefinition Width="65"/>
 									<ColumnDefinition Width="180"/>
+									<ColumnDefinition Width="65"/>
+									<ColumnDefinition Width="100"/>
 								</Grid.ColumnDefinitions>
 								<StackPanel Grid.Column="0" Orientation="Horizontal" Margin="3">
 									<Button Content="↑" Width="25" Margin="0,0,1,0"
-										Click="FieldUp_Click" CommandParameter="{Binding}"/>
+											Click="FieldUp_Click" CommandParameter="{Binding}"/>
 									<Button Content="↓" Width="25" Margin="0,0,1,0"
-										Click="FieldDown_Click" CommandParameter="{Binding}"/>
+											Click="FieldDown_Click" CommandParameter="{Binding}"/>
 									<Button Content="×" Width="25"
-										Click="DeleteField_Click" CommandParameter="{Binding}"
-										Visibility="{Binding VisibleIsNotSystem}"/>
+											Click="DeleteField_Click" CommandParameter="{Binding}"
+											Visibility="{Binding VisibleIsNotSystem}"/>
 								</StackPanel>
 								<TextBox Grid.Column="1" Text="{Binding Name}" Margin="3" Padding="3"
-										 IsEnabled="{Binding IsEnabled}"/>
-								<TextBox Grid.Column="2" Text="{Binding Title}" Margin="3" Padding="3"/>
-								<ComboBox Grid.Column="3" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:FieldType}}}"
-										SelectedValue="{Binding Type}" Margin="3" Padding="6,3"
-										IsEnabled="{Binding IsEnabled}"/>
-								<TextBox Grid.Column="4" Text="{Binding Length}" Margin="3" Padding="3" TextAlignment="Right" 
-									Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='String'}"/>
-								<CheckBox Grid.Column="5" IsChecked="{Binding Required}" HorizontalAlignment="Center" VerticalAlignment="Center"
-										IsEnabled="{Binding IsEnabled}"/>
+											 IsEnabled="{Binding IsEnabled}"/>
+								<TextBox Grid.Column="2" 
+											 Text="{Binding Title}" Margin="3" Padding="3"/>
+								<ComboBox Grid.Column="3" SelectedValue="{Binding Role}" 
+										ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:FieldRole}}}"
+										Margin="3" Padding="6,3" />
+								<ComboBox Grid.Column="4" 
+											ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:FieldType}}}"
+											SelectedValue="{Binding Type}" Margin="3" Padding="6,3"
+											IsEnabled="{Binding IsEnabled}"/>
+								<TextBox Grid.Column="5" Text="{Binding Length}" Margin="3" Padding="3" TextAlignment="Right" 
+										Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='String'}"/>
 								<ComboBox Grid.Column="6" SelectedValue="{Binding RefTable}" 
-									ItemsSource="{Binding RefTables, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-									Margin="3" Padding="6,3" 
-									Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='Reference'}"/>
-								<!--
-								<TextBox Grid.Column="7" Text="{Binding Default}" Margin="3" Padding="3"
-									Visibility="{Binding Required, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-								-->
+										ItemsSource="{Binding RefTables, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+										Margin="3" Padding="6,3" 
+										Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='Reference'}"/>
+								<CheckBox Grid.Column="7" IsChecked="{Binding Required}" HorizontalAlignment="Center" VerticalAlignment="Center"
+										IsEnabled="{Binding IsEnabled}"/>
+								<TextBox Grid.Column="8" Text="{Binding Default}" Margin="3" Padding="3"
+										IsEnabled="{Binding Required}" />
 							</Grid>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>
 			</StackPanel>
 		</Expander>
-		<Expander Header="Fields2" IsExpanded="True" Margin="0,20,0,0">
-			<Grid Margin="10">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="200"/>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="100"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-				</Grid.RowDefinitions>
-				<ListView Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Fields}"
-						  SelectionChanged="ListView_SelectionChanged">
-					<ListView.ItemTemplate>
-						<DataTemplate>
-							<TextBlock Grid.Column="1" Text="{Binding Name}" Margin="3" Padding="3" />
-						</DataTemplate>
-					</ListView.ItemTemplate>
-				</ListView>
-				<StackPanel Grid.Row="0" Grid.Column="1" DataContext="{Binding SelectedField}"
-						Visibility="{Binding Converter={StaticResource PointerToVisibilityConverter}}"
-						Orientation="Vertical" Margin="15,0,0,0">
-					<StackPanel Orientation="Horizontal">
-						<Label Width="70">Name</Label>
-						<TextBox Width="300" Text="{Binding Name}" Margin="3" Padding="3"
-							IsEnabled="{Binding IsEnabled}"/>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<Label Width="70">Title</Label>
-						<TextBox Width="300" Text="{Binding Title}" Margin="3" Padding="3"/>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<Label Width="70">Type</Label>
-						<ComboBox Width="300" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:FieldType}}}"
-							SelectedValue="{Binding Type}" Margin="3" Padding="6,4"
-							IsEnabled="{Binding IsEnabled}"/>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal" Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='String'}">
-						<Label Width="70">Length</Label>
-						<TextBox Width="150" Text="{Binding Length}" Margin="3" Padding="3" TextAlignment="Right"/>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal"
-							Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='Reference'}">
-						<Label Width="70">Reference</Label>
-						<ComboBox Width="300" SelectedValue="{Binding RefTable}" 								  
-							ItemsSource="{Binding RefTables, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-							Margin="3" Padding="6,4" />
-					</StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<Label Width="70">Required</Label>
-						<CheckBox IsChecked="{Binding Required}"
-							HorizontalAlignment="Left" VerticalAlignment="Center"
-							IsEnabled="{Binding IsEnabled}" Margin="3" Padding="3"/>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<Label Width="70">Visible</Label>
-						<CheckBox IsChecked="{Binding Visible}"
-							HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3" Padding="3"/>
-					</StackPanel>
-					<StackPanel Orientation="Horizontal">
-						<Label Width="70">Sort</Label>
-						<CheckBox IsChecked="{Binding Sort}"
-							HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3" Padding="3"/>
-					</StackPanel>
-				</StackPanel>
-			</Grid>
+		<Expander Header="User interface" IsExpanded="True" Margin="0,20,0,0">
+			<TabControl>
+				<TabItem DataContext="{Binding Ui.Index}" Header="Index" Padding="20,0">
+					<Grid Margin="0, 20">
+						<ItemsControl ItemsSource="{Binding Fields}">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="50"/>
+											<ColumnDefinition Width="50"/>
+											<ColumnDefinition Width="90"/>
+										</Grid.ColumnDefinitions>
+										<TextBox Grid.Column="0" Text="{Binding Field}" Margin="3" Padding="3"/>
+										<CheckBox Grid.Column="1" IsChecked="{Binding Sort}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+										<ComboBox Grid.Column="2" 
+											ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:SearchType}}}"
+											SelectedValue="{Binding Search}" Margin="3" Padding="6,3"/>
+									</Grid>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</Grid>
+				</TabItem>
+				<TabItem DataContext="{Binding Ui.EditItem}" Header="EditItem">
+					<Grid Margin="20">
+						<ItemsControl ItemsSource="{Binding Fields}">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Grid>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="70"/>
+											<ColumnDefinition Width="70"/>
+											<ColumnDefinition Width="70"/>
+											<ColumnDefinition Width="90"/>
+										</Grid.ColumnDefinitions>
+										<TextBox Grid.Column="0" Text="{Binding Field}" Margin="3" Padding="3"/>
+										<CheckBox Grid.Column="1" IsChecked="{Binding Multiline}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+										<CheckBox Grid.Column="2" IsChecked="{Binding Required}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+										<TextBox Grid.Column="3" Text="{Binding TabIndex}" Margin="3" Padding="3" TextAlignment="Right"/>
+									</Grid>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</Grid>
+				</TabItem>
+			</TabControl>
 		</Expander>
 	</StackPanel>
 </UserControl>

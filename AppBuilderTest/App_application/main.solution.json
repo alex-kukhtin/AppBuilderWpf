@@ -24,25 +24,21 @@
 			"fields": [
 				{
 					"name": "Id",
-					"primaryKey": true,
+					"role": "primaryKey",
 					"type": "Identifier"
 				},
 				{
 					"name": "Void",
-					"isVoid": true
+					"role": "void"
 				},
 				{
 					"name": "Name",
-					"isName": true,
-					"sort": true,
-					"search": true,
+					"role": "name",
 					"title": "@[Name]",
 					"length": 255
 				},
 				{
 					"name": "Memo",
-					"sort": true,
-					"search": true,
 					"title": "@[Memo]",
 					"length": 255
 				}
@@ -54,26 +50,21 @@
 			"fields": [
 				{
 					"name": "Id",
-					"primaryKey": true,
-					"sort": true,
+					"role": "primaryKey",
 					"type": "Identifier"
 				},
 				{
 					"name": "Void",
-					"isVoid": true
+					"role": "void"
 				},
 				{
 					"name": "Name",
-					"isName": true,
-					"search": true,
-					"sort": true,
+					"role": "name",
 					"title": "@[Name]",
 					"length": 255
 				},
 				{
 					"name": "SKU",
-					"sort": true,
-					"search": true,
 					"length": 50
 				},
 				{
@@ -84,14 +75,13 @@
 				},
 				{
 					"name": "Memo",
-					"search": true,
-					"sort": true,
 					"title": "@[Memo]",
 					"length": 255
 				}
 			],
 			"ui": {
-				"list": {
+				"index": {
+					"initialOrder": {"order": "Name", "dir": "asc" },
 					"fields":[
 						{ "field": "Id", "sort": true, "search": "exact" },
 						{ "field": "Name", "sort": true, "search": "like" },
@@ -100,12 +90,23 @@
 						{ "field": "Memo", "sort": "true", "search": "like"}
 					]
 				},
-				"edit": {
+				"editItem": {
+					"editIn": "dialog",
 					"fields": [
-						{ "field": "Name", "tabIndex": 1, "required": true },
-						{ "field": "SKU", "required": true },
+						{
+							"field": "Name",
+							"tabIndex": 1,
+							"required": true
+						},
+						{
+							"field": "SKU",
+							"required": true
+						},
 						{ "field": "Unit" },
-						{ "field": "Memo", "multiline": true }
+						{
+							"field": "Memo",
+							"multiline": true
+						}
 					]
 				}
 			}
@@ -121,27 +122,21 @@
 				},
 				{
 					"name": "Void",
-					"isVoid": true
+					"role": "void"
 				},
 				{
 					"name": "Name",
-					"isName": true,
-					"search": true,
-					"sort": true,
+					"role": "name",
 					"title": "@[Name]",
 					"length": 255
 				},
 				{
 					"name": "Memo",
-					"search": true,
-					"sort": true,
 					"title": "@[Memo]",
 					"length": 255
 				},
 				{
 					"name": "Code",
-					"search": true,
-					"sort": true,
 					"title": "@[Code]",
 					"length": 50
 				}
@@ -159,33 +154,28 @@
 			"fields": [
 				{
 					"name": "Id",
-					"primaryKey": true,
+					"role": "primaryKey",
 					"type": "Identifier"
 				},
 				{
 					"name": "Void",
-					"isVoid": true
+					"role": "void"
 				},
 				{
 					"name": "Date",
-					"sort": "true",
 					"title": "@[Date]",
 					"type": "Date"
 				},
 				{
 					"name": "No",
-					"search": true,
-					"sort": true,
 					"title": "@[Number]",
 					"length": 50
 				},
 				{
 					"name": "Sum",
-					"search": true,
 					"type": "Money",
-					"sort": true,
 					"required": true,
-					"default": 0,
+					"default": "0",
 					"title": "@[Sum]"
 				},
 				{
@@ -197,7 +187,6 @@
 				},
 				{
 					"name": "Memo",
-					"search": "true",
 					"title": "@[Memo]",
 					"length": 255
 				}
@@ -205,20 +194,21 @@
 			"details": [
 				{
 					"name": "DocDetails",
+					"nameInParent": "Rows",
 					"fields": [
 						{
 							"name": "Id",
-							"primaryKey": true,
+							"role": "primaryKey",
 							"type": "Identifier"
 						},
 						{
 							"name": "RowNo",
+							"role": "rowNumber",
 							"rowNumber": true
 						},
 						{
 							"name": "Document",
-							"required": true,
-							"parent": true,
+							"role": "parent",
 							"type": "Reference",
 							"refTable": "Document.Document"
 						},

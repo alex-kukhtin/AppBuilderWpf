@@ -8,7 +8,17 @@ using Newtonsoft.Json;
 
 namespace AppBuilder;
 
-public class BaseNode : INotifyPropertyChanged
+public class ObservableNode : INotifyPropertyChanged
+{
+	public event PropertyChangedEventHandler? PropertyChanged;
+
+	public void OnPropertyChanged([CallerMemberName] String prop = "")
+	{
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+	}
+
+}
+public class BaseNode : ObservableNode
 {
 	private String? _name;
 
@@ -48,17 +58,14 @@ public class BaseNode : INotifyPropertyChanged
 		}
 	}
 
-	public event PropertyChangedEventHandler? PropertyChanged;
-
-	public void OnPropertyChanged([CallerMemberName] String prop = "")
-	{
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-	}
-
 	[JsonIgnore]
 	public virtual String Image => "/Images/FolderClosed.png";
 
 	public virtual void OnNameChanged() 
+	{ 
+	}
+
+	internal virtual void OnInit() 
 	{ 
 	}
 }

@@ -9,7 +9,9 @@
 23. Call Generator from AppBuilderWpf
 24. Localization files
 25. Menu icon?
-26. 
+26. Field. Убрать System
+27. Add Details to Details - GPF
+28. 
 
 SQL builder
 	2. Primary key
@@ -17,7 +19,6 @@ SQL builder
 	7. Generate _ui.sql
 	8. Add struct.sql, ui.sql
 	9. Details -> RowNumber
-	10. Maps
 	11. Default PageSize
 	12. Fetch
 	13. Словари локализации
@@ -29,7 +30,6 @@ SQL builder
 
 Table Panel
 61. Global Styles for pane
-62. MoveUp/MoveDown/Delete from toolbar
-63. Field UI: Visible in list / Editable / Sortable
-64. Property Groups
-65. 
+67. UI -> Enable Items -> Checkboxes (Index, EditFolder, EditItem, Browse)
+68. Разобраться с Enabled/Disabled и System.
+69. ShouldSerialize (Required, Default)
