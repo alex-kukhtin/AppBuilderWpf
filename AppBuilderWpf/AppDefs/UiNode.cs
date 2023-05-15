@@ -14,8 +14,9 @@ public enum Direction
 	Desc
 }
 
-public enum EditIn
+public enum UiView
 {
+	None,
 	Dialog,
 	Page
 }
@@ -41,9 +42,9 @@ public class UiInitialOrder : ObservableNode
 
 public class UiElementNode : ObservableNode
 {
-	private EditIn? _editIn;
+	private UiView _view;
 	[JsonProperty(Order = 2)]
-	public EditIn? EditIn { get => _editIn; set { _editIn = value; OnPropertyChanged(); } }
+	public UiView View { get => _view; set { _view = value; OnPropertyChanged(); } }
 
 	UiInitialOrder? _initialOrder;
 	[JsonProperty(Order = 3)]
@@ -55,6 +56,9 @@ public class UiElementNode : ObservableNode
 
 public class UiNode : ObservableNode
 {
+	[JsonIgnore]
+	internal TableNode? _parent;
+
 	UiElementNode? _index;
 	[JsonProperty(Order = 5)]
 	public UiElementNode? Index { get => _index; set { _index = value; OnPropertyChanged(); } }
@@ -71,6 +75,6 @@ public class UiNode : ObservableNode
 
 	internal void SetParent(TableNode parent)
 	{
-
+		_parent = parent;	
 	}
 }

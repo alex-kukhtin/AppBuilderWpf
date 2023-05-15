@@ -1,8 +1,9 @@
 ﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
+using System.ComponentModel;
 using System.Linq;
-using System.Windows;
+using System.Net.Http.Headers;
 using Newtonsoft.Json;
 
 namespace AppBuilder;
@@ -32,14 +33,10 @@ public enum FieldRole
 	Parent
 }
 
-public class FieldNode : BaseNode
+public class FieldNode : BaseNode, IDataErrorInfo
 {
 	[JsonIgnore]
 	internal TableNode? _parent;
-
-	[JsonProperty(Order = 1)]
-	public Boolean System { get; set; }
-
 
 	private Boolean _required;
 	[JsonProperty(Order = 2)]
@@ -77,14 +74,14 @@ public class FieldNode : BaseNode
 			if (Type == FieldType.String)
 				Length = 50;
 			else
-				Length = 0;
-			OnPropertyChanged();
+				Length = null;
+			OnPropertyChanged(String.Empty);
 		}
 	}
 
-	private Int32 _length;
+	private Int32? _length;
 	[JsonProperty(Order = 5)]
-	public Int32 Length
+	public Int32? Length
 	{
 		get => _length; set { _length = value; OnPropertyChanged(); }
 	}
@@ -113,18 +110,19 @@ public class FieldNode : BaseNode
 				foreach( var f in _parent.Fields.Where(f => f.Role == value))
 					f.ClearRole();
 			}
-			_role = value; 
-			OnPropertyChanged(); 
-			OnPropertyChanged(nameof(Type));
+			_role = value;
+			if (_role != FieldRole.Ordinal)
+			{
+				Required = true;
+				Default = null;
+			}
+			OnPropertyChanged(String.Empty); 
 		}
 	}
 
 	[JsonIgnore]
 	public Boolean IsEnabled => Role == FieldRole.Ordinal;
-
-	[JsonIgnore]
-	public Visibility VisibleIsNotSystem => System ? Visibility.Hidden : Visibility.Visible;
-
+	public Boolean IsTypeEnabled => Role == FieldRole.Ordinal;
 	internal void SetParent(TableNode parent)
 	{
 		_parent = parent;
@@ -135,7 +133,21 @@ public class FieldNode : BaseNode
 		if (_role == FieldRole.Ordinal)
 			return;
 		_role = FieldRole.Ordinal;
-		OnPropertyChanged(nameof(Role));
-		OnPropertyChanged(nameof(Type));
+		OnPropertyChanged(String.Empty);
 	}
+
+	#region
+	[JsonIgnore]
+	public String Error => throw new NotImplementedException();
+
+	[JsonIgnore]
+	public String this[String columnName] => 
+		columnName switch
+		{
+			nameof(Length) => Type == FieldType.String
+				? (Length != null && Length.Value > 0 && Length.Value <= 4000) ? String.Empty : "Invalid String Length"
+				: String.Empty,
+			_ => String.Empty,
+		};
+	#endregion
 }

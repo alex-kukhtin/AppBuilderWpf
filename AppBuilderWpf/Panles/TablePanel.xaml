@@ -9,8 +9,22 @@
 	<UserControl.Resources>
 		<ResourceDictionary>
 			<local:FieldTypeToVisibilityConverter x:Key="FieldTypeToVisibilityConverter" />
+			<local:FieldTypeToBooleanConverter x:Key="FieldTypeToBooleanConverter" />
 			<local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 			<local:PointerToVisibilityConverter x:Key="PointerToVisibilityConverter" />
+			<!-- Styles -->
+			<Style TargetType="TextBox">
+				<Setter Property="Margin" Value="3"/>
+				<Setter Property="Padding" Value="3"/>
+			</Style>
+			<Style TargetType="ComboBox">
+				<Setter Property="Margin" Value="3"/>
+				<Setter Property="Padding" Value="6,3"/>
+			</Style>
+			<Style TargetType="CheckBox">
+				<Setter Property="HorizontalAlignment" Value="Center"/>
+				<Setter Property="VerticalAlignment" Value="Center" />
+			</Style>
 		</ResourceDictionary>
 	</UserControl.Resources>
 	<StackPanel>
@@ -31,25 +45,16 @@
 				</Grid.RowDefinitions>
 
 				<Label Grid.Row="0" Grid.Column="0">Name</Label>
-				<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" Margin="3" Padding="3"/>
+				<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}"/>
 				<Label Grid.Row="1" Grid.Column="0">Title</Label>
-				<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Title}" Margin="5" Padding="3"/>
+				<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Title}"/>
 				<Label Grid.Row="2" Grid.Column="0">Description</Label>
-				<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Description}" Margin="5" Padding="3"
-				TextWrapping="Wrap" AcceptsReturn="True" Height="75" VerticalScrollBarVisibility="Visible"/>
+				<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Description}"/>
 
 			</Grid>
 		</Expander>
-		<Expander Header="Feilds" IsExpanded="True" Margin="0,20,0,0">
-			<StackPanel Margin="10">
-				<ToolBar>
-					<Button Click="AddField_Click">
-						<StackPanel Orientation="Horizontal">
-							<Image Source="/Images/Save.png" Margin="2"/>
-							<TextBlock Margin="2">Add Field</TextBlock>
-						</StackPanel>
-					</Button>
-				</ToolBar>
+		<Expander Header="Fields" IsExpanded="True" Margin="0,18,0,0">
+			<StackPanel Margin="0,6,0,0">
 				<Grid>
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="83"/>
@@ -62,6 +67,7 @@
 						<ColumnDefinition Width="65"/>
 						<ColumnDefinition Width="100"/>
 					</Grid.ColumnDefinitions>
+					<Button Grid.Column="0" Click="AddField_Click" Margin="3" Padding="3">Add Field</Button>
 					<Label Grid.Column="1">Name</Label>
 					<Label Grid.Column="2">Title</Label>
 					<Label Grid.Column="3">Role</Label>
@@ -92,29 +98,32 @@
 									<Button Content="↓" Width="25" Margin="0,0,1,0"
 											Click="FieldDown_Click" CommandParameter="{Binding}"/>
 									<Button Content="×" Width="25"
-											Click="DeleteField_Click" CommandParameter="{Binding}"
-											Visibility="{Binding VisibleIsNotSystem}"/>
+											Click="DeleteField_Click" CommandParameter="{Binding}"/>
 								</StackPanel>
-								<TextBox Grid.Column="1" Text="{Binding Name}" Margin="3" Padding="3"
-											 IsEnabled="{Binding IsEnabled}"/>
-								<TextBox Grid.Column="2" 
-											 Text="{Binding Title}" Margin="3" Padding="3"/>
+								<TextBox Grid.Column="1" Text="{Binding Name}"/>
+								<TextBox Grid.Column="2" Text="{Binding Title}"/>
 								<ComboBox Grid.Column="3" SelectedValue="{Binding Role}" 
-										ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:FieldRole}}}"
-										Margin="3" Padding="6,3" />
+										ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:FieldRole}}}"/>
 								<ComboBox Grid.Column="4" 
 											ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:FieldType}}}"
-											SelectedValue="{Binding Type}" Margin="3" Padding="6,3"
-											IsEnabled="{Binding IsEnabled}"/>
-								<TextBox Grid.Column="5" Text="{Binding Length}" Margin="3" Padding="3" TextAlignment="Right" 
-										Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='String'}"/>
+											SelectedValue="{Binding Type}"
+											IsEnabled="{Binding IsTypeEnabled}"/>
+								<TextBox Grid.Column="5" TextAlignment="Right" 
+										IsEnabled="{Binding Type, Converter={StaticResource FieldTypeToBooleanConverter}, ConverterParameter='String'}">
+									<TextBox.Text>
+										<Binding Path="Length">
+											<Binding.ValidationRules>
+												<DataErrorValidationRule />
+											</Binding.ValidationRules>
+										</Binding>
+									</TextBox.Text>
+								</TextBox>
 								<ComboBox Grid.Column="6" SelectedValue="{Binding RefTable}" 
 										ItemsSource="{Binding RefTables, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-										Margin="3" Padding="6,3" 
-										Visibility="{Binding Type, Converter={StaticResource FieldTypeToVisibilityConverter}, ConverterParameter='Reference'}"/>
-								<CheckBox Grid.Column="7" IsChecked="{Binding Required}" HorizontalAlignment="Center" VerticalAlignment="Center"
+										IsEnabled="{Binding Type, Converter={StaticResource FieldTypeToBooleanConverter}, ConverterParameter='Reference'}"/>
+								<CheckBox Grid.Column="7" IsChecked="{Binding Required}"
 										IsEnabled="{Binding IsEnabled}"/>
-								<TextBox Grid.Column="8" Text="{Binding Default}" Margin="3" Padding="3"
+								<TextBox Grid.Column="8" Text="{Binding Default}"
 										IsEnabled="{Binding Required}" />
 							</Grid>
 						</DataTemplate>
@@ -122,51 +131,13 @@
 				</ItemsControl>
 			</StackPanel>
 		</Expander>
-		<Expander Header="User interface" IsExpanded="True" Margin="0,20,0,0">
-			<TabControl>
-				<TabItem DataContext="{Binding Ui.Index}" Header="Index" Padding="20,0">
-					<Grid Margin="0, 20">
-						<ItemsControl ItemsSource="{Binding Fields}">
-							<ItemsControl.ItemTemplate>
-								<DataTemplate>
-									<Grid>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="50"/>
-											<ColumnDefinition Width="50"/>
-											<ColumnDefinition Width="90"/>
-										</Grid.ColumnDefinitions>
-										<TextBox Grid.Column="0" Text="{Binding Field}" Margin="3" Padding="3"/>
-										<CheckBox Grid.Column="1" IsChecked="{Binding Sort}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-										<ComboBox Grid.Column="2" 
-											ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:SearchType}}}"
-											SelectedValue="{Binding Search}" Margin="3" Padding="6,3"/>
-									</Grid>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
-					</Grid>
+		<Expander Header="User interface" IsExpanded="True" Margin="0,18,0,0">
+			<TabControl Margin="0,10">
+				<TabItem DataContext="{Binding Ui.Index}" Header="Index">
+					<local:UiElementPanel />
 				</TabItem>
 				<TabItem DataContext="{Binding Ui.EditItem}" Header="EditItem">
-					<Grid Margin="20">
-						<ItemsControl ItemsSource="{Binding Fields}">
-							<ItemsControl.ItemTemplate>
-								<DataTemplate>
-									<Grid>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="70"/>
-											<ColumnDefinition Width="70"/>
-											<ColumnDefinition Width="70"/>
-											<ColumnDefinition Width="90"/>
-										</Grid.ColumnDefinitions>
-										<TextBox Grid.Column="0" Text="{Binding Field}" Margin="3" Padding="3"/>
-										<CheckBox Grid.Column="1" IsChecked="{Binding Multiline}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-										<CheckBox Grid.Column="2" IsChecked="{Binding Required}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-										<TextBox Grid.Column="3" Text="{Binding TabIndex}" Margin="3" Padding="3" TextAlignment="Right"/>
-									</Grid>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
-					</Grid>
+					<local:UiElementPanel />
 				</TabItem>
 			</TabControl>
 		</Expander>

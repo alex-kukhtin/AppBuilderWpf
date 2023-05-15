@@ -20,6 +20,9 @@ public class TablesNode : BaseNode
 
 public class TableNode : BaseNode
 {
+	[JsonIgnore]
+	internal AppNode? _parent;
+
 	[JsonProperty(Order = 2)]
 	public ObservableCollection<FieldNode> Fields { get; set; } = new();
 
@@ -52,11 +55,16 @@ public class TableNode : BaseNode
 		Fields.Add(f);
 	}
 
-	public FieldNode AddField(Boolean system, String name, FieldType type, String? Title = null, Int32 length = 0)
+	public FieldNode AddField(String name, FieldType type, FieldRole role = FieldRole.Ordinal, String? Title = null, Int32 length = 0)
 	{
-		var f = new FieldNode() { System = system, Name = name, Type = type, Title = Title, Length = length };
-		if (system)
-			f.Required = true;
+		var f = new FieldNode() { Name = name, Type = type, Role = role, Title = Title, Length = length };
+		Fields.Add(f);
+		return f;
+	}
+
+	public FieldNode AddStringField(String name, String? Title = null, Int32 length = 0)
+	{
+		var f = new FieldNode() { Name = name, Type = FieldType.String, Title = Title, Length = length };
 		Fields.Add(f);
 		return f;
 	}
@@ -80,16 +88,14 @@ public class TableNode : BaseNode
 	{
 		var t = new TableNode() { Name = $"Details{Details.Count + 1}" };
 
-		var id = t.AddField(true, "Id", FieldType.Identifier);
-		id.Role = FieldRole.PrimaryKey;
+		t.AddField("Id", FieldType.Identifier, FieldRole.PrimaryKey);
 
-		var parent = t.AddField(true, Name!, FieldType.Reference);
+		var parent = t.AddField(Name!, FieldType.Reference);
 		parent.RefTable = NameWithSchema;
 		parent.Required = true;
 
-		var rowNo = t.AddField(true, "RowNumber", FieldType.Integer);
+		var rowNo = t.AddField("RowNumber", FieldType.Integer, FieldRole.RowNumber);
 		rowNo.Required = true;
-		rowNo.Role = FieldRole.RowNumber;
 		rowNo.Default = "1";
 
 		Details.Add(t);
@@ -109,7 +115,7 @@ public class TableNode : BaseNode
 	}
 	internal void SetParent(AppNode parent)
 	{
-
+		_parent = parent;	
 	}
 
 	internal override void OnInit()

@@ -28,9 +28,9 @@ public class CatalogNode : TableNode
 
 	public void ApplyDefaults()
 	{
-		AddField(true, "Id", FieldType.Identifier);
-		AddField(true, "Void", FieldType.Boolean);
-		AddField(false, "Name", FieldType.String, "@[Name]", 255);
-		AddField(false, "Memo", FieldType.String, "@[Memo]", 255);
+		AddField("Id", FieldType.Identifier, FieldRole.PrimaryKey);
+		AddField("Void", FieldType.Boolean, FieldRole.Void);
+		AddStringField("Name", "@[Name]", 255);
+		AddStringField("Memo", "@[Memo]", 255);
 	}
 }

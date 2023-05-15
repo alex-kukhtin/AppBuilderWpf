@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="AppBuilder.UiElementPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AppBuilder"
+             mc:Ignorable="d"  Margin="6"
+             d:DesignHeight="450" d:DesignWidth="800">
+	<StackPanel>
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="83"/>
+				<ColumnDefinition Width="100"/>
+			</Grid.ColumnDefinitions>
+			<Label Grid.Column="0">View</Label>
+			<ComboBox Grid.Column="1" SelectedValue="{Binding View}" 
+					ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:UiView}}}"/>
+		</Grid>
+		<Line Width="500" Height="1" Stroke="Black"/>
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="83"/>
+				<ColumnDefinition Width="100"/>
+				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="90"/>
+			</Grid.ColumnDefinitions>
+			<Button Grid.Column="0" Margin="3" Padding="3">Add Field</Button>
+			<Label Grid.Column="1">Field</Label>
+			<Label Grid.Column="2" HorizontalAlignment="Center">Sort</Label>
+			<Label Grid.Column="3">Search</Label>
+		</Grid>
+		<Grid>
+			<ItemsControl ItemsSource="{Binding Fields}">
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="83"/>
+								<ColumnDefinition Width="100"/>
+								<ColumnDefinition Width="60"/>
+								<ColumnDefinition Width="90"/>
+							</Grid.ColumnDefinitions>
+							<StackPanel Grid.Column="0" Orientation="Horizontal" Margin="3">
+								<Button Content="↑" Width="25" Margin="0,0,1,0"
+											CommandParameter="{Binding}"/>
+								<Button Content="↓" Width="25" Margin="0,0,1,0"
+											CommandParameter="{Binding}"/>
+								<Button Content="×" Width="25"
+											CommandParameter="{Binding}"/>
+							</StackPanel>
+							<TextBox Grid.Column="1" Text="{Binding Field}"/>
+							<CheckBox Grid.Column="2" IsChecked="{Binding Sort}"/>
+							<ComboBox Grid.Column="3" 
+									ItemsSource="{Binding Source={local:EnumBindingSource {x:Type local:SearchType}}}"
+									SelectedValue="{Binding Search}"/>
+						</Grid>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</Grid>
+	</StackPanel>
+</UserControl>

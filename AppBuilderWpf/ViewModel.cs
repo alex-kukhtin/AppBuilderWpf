@@ -1,9 +1,11 @@
 ﻿// Copyright © 2022 Oleksandr Kukhtin. All rights reserved.
 
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -27,6 +29,16 @@ public class ViewModel : INotifyPropertyChanged
 	public void OnPropertyChanged([CallerMemberName] String prop = "")
 	{
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+	}
+
+	internal void OpenFile(String fileName)
+	{
+		var json = File.ReadAllText(fileName);
+		var appNode = JsonConvert.DeserializeObject<AppNode>(json, JsonHelpers.DefaultSettings);
+		appNode?.OnInit();
+		if (appNode == null)
+			throw new InvalidOperationException("Invalid solution file");
+		Open(appNode, fileName);
 	}
 
 	public void Open(AppNode? node, String fileName)

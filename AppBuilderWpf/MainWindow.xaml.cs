@@ -28,11 +28,20 @@ public partial class MainWindow : Window
 	public MainWindow()
 	{
 		InitializeComponent();
-		DataContext= _viewModel;	
+		DataContext= _viewModel;
+		Loaded += MainWindow_Loaded;
+	}
+
+	private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+	{
+		// TODO: remove here
+		var path = System.IO.Path.GetFullPath("../../../../AppBuilderTest/App_application\\main.solution.json");
+		_viewModel.OpenFile(path);
 	}
 
 	private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
 	{
 		_viewModel.SelectedItem = e.NewValue;
 	}
+	
 }

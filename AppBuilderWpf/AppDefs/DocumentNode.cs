@@ -27,10 +27,10 @@ public class DocumentNode : TableNode
 
 	public void ApplyDefaults()
 	{
-		AddField(true, "Id", FieldType.Identifier);
-		AddField(true, "Void", FieldType.Boolean);
-		AddField(false, "Date", FieldType.Date, "@[Date]");
-		AddField(false, "No", FieldType.String, "@[Number]", 50);
-		AddField(false, "Memo", FieldType.String, "@[Memo]", 255);
+		AddField("Id", FieldType.Identifier, FieldRole.PrimaryKey);
+		AddField("Void", FieldType.Boolean, FieldRole.Void);
+		AddField("Date", FieldType.Date, FieldRole.Ordinal, "@[Date]");
+		AddStringField("No", "@[Number]", 50);
+		AddStringField("Memo", "@[Memo]", 255);
 	}
 }

@@ -5,11 +5,9 @@
 16. Rename RefTable to Reference
 20. Show FileName in WindowTitle
 21. DocDetails Default Fields
-22. Validate model
 23. Call Generator from AppBuilderWpf
 24. Localization files
 25. Menu icon?
-26. Field. Убрать System
 27. Add Details to Details - GPF
 28. 
 
@@ -29,7 +27,8 @@ SQL builder
 
 
 Table Panel
-61. Global Styles for pane
+
 67. UI -> Enable Items -> Checkboxes (Index, EditFolder, EditItem, Browse)
-68. Разобраться с Enabled/Disabled и System.
 69. ShouldSerialize (Required, Default)
+70. Default -> Enabled/Disabled for (Required, Default)
+71. 

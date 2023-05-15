@@ -81,17 +81,37 @@
 			],
 			"ui": {
 				"index": {
-					"initialOrder": {"order": "Name", "dir": "asc" },
-					"fields":[
-						{ "field": "Id", "sort": true, "search": "exact" },
-						{ "field": "Name", "sort": true, "search": "like" },
-						{ "field": "SKU", "sort": true, "search": "exact" },
+					"view": "page",
+					"initialOrder": {
+						"order": "Name",
+						"dir": "asc"
+					},
+					"fields": [
+						{
+							"field": "Id",
+							"sort": true,
+							"search": "exact"
+						},
+						{
+							"field": "Name",
+							"sort": true,
+							"search": "like"
+						},
+						{
+							"field": "SKU",
+							"sort": true,
+							"search": "exact"
+						},
 						{ "field": "Unit" },
-						{ "field": "Memo", "sort": "true", "search": "like"}
+						{
+							"field": "Memo",
+							"sort": "true",
+							"search": "like"
+						}
 					]
 				},
 				"editItem": {
-					"editIn": "dialog",
+					"view": "dialog",
 					"fields": [
 						{
 							"field": "Name",
