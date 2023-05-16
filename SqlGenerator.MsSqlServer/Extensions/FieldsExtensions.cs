@@ -36,7 +36,7 @@ internal static class FieldsExtensions
 	{
 		if (elem.IsVoid)
 			return "bit";
-		else if (elem.RowNumber)
+		else if (elem.IsRowNumber)
 			return "int";
 		return elem.Type switch
 		{
@@ -69,10 +69,19 @@ internal static class FieldsExtensions
 		var escname = $"{alias}.{field.Name.Escape()}";
 		return field switch
 		{
-			{ PrimaryKey: true } => $"[Id!!Id] = {escname}",
+			{ IsPrimaryKey: true } => $"[Id!!Id] = {escname}",
 			{ IsName: true} => $"[Name!!Name] = {escname}",
 			{ IsReference: true} => $"[{field.Name}!T{field.ReferenceItem()}!RefId] = {escname}",
 			_ => escname
+		};
+	}
+	public static String LikeDeclaration(this FieldElem field, UIFieldElem uiField, String alias)
+	{
+		return uiField.Search switch
+		{
+			SearchType.Like => $"{alias}.{field.Name.Escape()} like @fr",
+			SearchType.Exact => $"{alias}.{field.Name.Escape()} = @Fragment",
+			_ => throw new InvalidOperationException("Invalid like call")
 		};
 	}
 }

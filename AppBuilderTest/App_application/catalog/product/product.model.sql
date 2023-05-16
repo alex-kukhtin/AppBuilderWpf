@@ -50,7 +50,7 @@ begin
 	select p.Id, p.Unit,
 		count(*) over()
 	from cat.[Products] p
-	where p.Void = 0 and (@fr is null or p.[Name] like @fr or p.SKU like @fr or p.Memo like @fr)
+	where p.Void = 0 and (@fr is null or p.Id = @Fragment or p.[Name] like @fr or p.SKU = @Fragment or p.Memo like @fr)
 	order by 
 		case when @Dir = N'asc' then
 			case @Order

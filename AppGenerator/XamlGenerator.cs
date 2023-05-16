@@ -45,8 +45,8 @@ public class XamlGenerator
 		indexView.Replace("$(CollectionName)", descr.Table.Name!.Pluralize());
 		indexView.Replace("$(ElementName)", descr.Table.Name);
 		indexView.Replace("$(EditUrl)", $"/{descr.Path.ToLowerInvariant()}/edit");
-		var columns = descr.Table.Ui?.List?.Fields.Select(u => GetDataGridColumn(descr.FindField(u.Field), descr))
-			?? descr.Table.Fields.Where(f => f.IsName).Select(f => GetDataGridColumn(f, descr));
+		var columns = descr.Table.Ui?.Index?.Fields.Select(u => GetDataGridColumn(u, descr.FindField(u.Field), descr))
+			?? Enumerable.Empty<String>();
 		indexView.Replace("$(Columns)", String.Join("\n", columns));
 		_modelWriter.WriteFile(indexView.ToString(), descr.Path, fileName);
 	}
@@ -58,7 +58,7 @@ public class XamlGenerator
 		fileDialog.Replace("$(ElementName)", descr.Table.Name);
 		fileDialog.Replace("$(ElementTitle)", descr.Table.Title ?? descr.Table.Name);
 
-		var controls = descr.Table.Ui?.Edit?.Fields.Select(u => GetEditControl(u, descr.FindField(u.Field), descr))
+		var controls = descr.Table.Ui?.EditItem?.Fields.Select(u => GetEditControl(u, descr.FindField(u.Field), descr))
 				?? Enumerable.Empty<String>();
 
 		fileDialog.Replace("$(Controls)", String.Join("\n", controls));
@@ -81,7 +81,7 @@ public class XamlGenerator
 		_modelWriter.WriteFile(browseDialog.ToString(), descr.Path, fileName);
 	}
 
-	String GetEditControl(UIField ui, FieldElem fieldElem, TableDescriptor descr)
+	String GetEditControl(UIFieldElem ui, FieldElem fieldElem, TableDescriptor descr)
 	{
 		var title = fieldElem.Title ?? fieldElem.Name;
 		var value = $"{descr.Table.Name}.{fieldElem.Name}";
@@ -98,7 +98,7 @@ public class XamlGenerator
 			return "\t\t" + $$"""<TextBox Label="{{title}}" Value="{Bind {{value}}}"{{tabIndex}}{{multiline}}{{requred}}/>""";
 		}
 	}
-	String GetDataGridColumn(FieldElem fieldElem, TableDescriptor descr)
+	String GetDataGridColumn(UIFieldElem uiField, FieldElem fieldElem, TableDescriptor descr)
 	{
 		var title = fieldElem.Title ?? fieldElem.Name;
 		var value = fieldElem.Name;
@@ -110,9 +110,9 @@ public class XamlGenerator
 			var refName = refTable.NameField();
 			value = $"{fieldElem.Name}.{refName}";
 		}
-		if (fieldElem.IsReference || !fieldElem.Sort)
+		if (fieldElem.IsReference || !uiField.Sort)
 			sort = @" Sort=""False""";
-		if (fieldElem.PrimaryKey)
+		if (fieldElem.IsPrimaryKey)
 			role = @" Role=""Id""";
 		String column = $$"""<DataGridColumn Header="{{title}}" Content="{Bind {{value}}}"{{sort}}{{role}}/>""";
 		return "\t\t\t" + column;

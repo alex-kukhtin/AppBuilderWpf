@@ -83,7 +83,7 @@
 				"index": {
 					"view": "page",
 					"initialOrder": {
-						"order": "Name",
+						"orderBy": "Name",
 						"dir": "asc"
 					},
 					"fields": [
@@ -137,7 +137,7 @@
 			"fields": [
 				{
 					"name": "Id",
-					"primaryKey": true,
+					"role": "primaryKey",
 					"type": "Identifier"
 				},
 				{

@@ -19,6 +19,16 @@ public enum FieldType
 	Reference,
 }
 
+public enum FieldRole
+{
+	Ordinal,
+	PrimaryKey,
+	Void,
+	Name,
+	RowNumber,
+	Parent
+}
+
 public class FieldElem : BaseElem
 {
 	public Int32 Length { get; init; }
@@ -26,13 +36,13 @@ public class FieldElem : BaseElem
 	public String? RefTable { get; init; }
 	public Boolean Required { get; init; }
 	public String? Default { get; init; }
-	public Boolean Sort { get; init; }
-	public Boolean Search { get; init; }
-	public Boolean Parent { get; init; }
-	public Boolean IsName { get; init; }
-	public Boolean IsVoid { get; init; }
-	public Boolean PrimaryKey { get; init; }
-	public Boolean RowNumber { get; init; }
+	public FieldRole Role { get; init; }
+
 	public Boolean IsReference => Type == FieldType.Reference;
-	public Boolean IsNotNull => Required || PrimaryKey || IsVoid;
+	public Boolean IsNotNull => Required || IsPrimaryKey || IsVoid || IsParent;
+	public Boolean IsName => Role == FieldRole.Name;
+	public Boolean IsPrimaryKey => Role == FieldRole.PrimaryKey;
+	public Boolean IsVoid => Role == FieldRole.Void;
+	public Boolean IsParent => Role == FieldRole.Parent;
+	public Boolean IsRowNumber => Role == FieldRole.RowNumber;
 }

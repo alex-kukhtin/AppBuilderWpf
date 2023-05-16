@@ -24,7 +24,7 @@
 		<DataGrid Grid.Row="2"  ItemsSource="{Bind Parent.ItemsSource}" FixedHeader="True"
 				  Sort="True"
 				  DoubleClick="{BindCmd Dialog, Action=EditSelected, Argument={Bind Agents}, Url='/catalog/agent/edit'}">
-			<DataGridColumn Header="@[Name]" Content="{Bind Name}"/>
+
 			<DataGridColumn Fit="True" Wrap="NoWrap" Sort="False">
 				<CommandBar Visibility="Hover">
 					<Button Icon="Edit" 

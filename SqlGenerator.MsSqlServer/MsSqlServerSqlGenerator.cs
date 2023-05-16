@@ -214,11 +214,11 @@ create table {descr.Schema.SchemaName()}.{descr.Table.TableName}
 		String fkText = String.Empty;
 		if (foreignKey != null)
 			fkText = $"\n\t\t/* {foreignKey} */";
-		if (field.PrimaryKey && _appElem.IdentifierType.HasSequence())
+		if (field.IsPrimaryKey && _appElem.IdentifierType.HasSequence())
 			defaultConstraint = $"\n\t\tconstraint DF_{tableName}_{field.Name} default (next value for {tableDescr.Schema.SchemaName()}.SQ_{tableName})";
 		else if  (field.IsVoid)
 			defaultConstraint = $"\n\t\tconstraint DF_{tableName}_{field.Name} default (0)";
-		else if (field.Required && !field.Parent)
+		else if (field.Required && !field.IsParent)
 			defaultConstraint = $"\n\t\tconstraint DF_{tableName}_{field.Name} default ({field.Default})";
 		return new FieldResult($"\t{field.Name.Escape()} {field.SqlType(_appElem.IdentifierType)}{nullable}{defaultConstraint}{fkText}", foreignKeyResult);
 	}

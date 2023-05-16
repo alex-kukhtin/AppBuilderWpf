@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 using AppGenerator;
@@ -60,9 +59,9 @@ internal class EndpointGenerator
 		return groupString;
 	}
 
-	String GenerateOrderByIndex(String alias)
+	String GenerateOrderByIndex(TableDescriptor descr, UIElemForm uiForm, String alias)
 	{
-		var groups = _descr.Table.Fields.Where(f => f.Sort).GroupBy(f => f.SqlTypeGroup(_root.IdentifierType));
+		var groups = uiForm.Fields.Where(f => f.Sort).Select(f => descr.FindField(f.Field)).GroupBy(f => f.SqlTypeGroup(_root.IdentifierType));
 		if (!groups.Any())
 			return $"{alias}.{_descr.PrimaryKeyName()}";
 		var sb = new StringBuilder();
@@ -75,7 +74,7 @@ internal class EndpointGenerator
 		return sb.ToString();
 	}
 
-	String GenerateIndex()
+	String GenerateIndex(UIElemForm uiForm)
 	{
 		var sb = new StringBuilder();
 
@@ -90,20 +89,21 @@ internal class EndpointGenerator
 
 		var propName = _descr.Table.TableName;
 		var iderType = _root.IdentifierType.SqlType();
-		var sortDescr = _descr.RealSort();
+		var sortDescr = uiForm.RealSort();
 		var pkName = _descr.PrimaryKeyName();
 		var voidName = _descr.VoidName();
-		var mapFields = _descr.Table.Fields.Where(f => f.PrimaryKey || f.IsReference)
+		var mapFields = _descr.Table.Fields.Where(f => f.IsPrimaryKey || f.IsReference)
 			.Select(f => f.Name.Escape());
-		var mapFieldsAlias = _descr.Table.Fields.Where(f => f.PrimaryKey || f.IsReference)
+		var mapFieldsAlias = _descr.Table.Fields.Where(f => f.IsPrimaryKey || f.IsReference)
 			.Select(f => $"{alias}.{f.Name.Escape()}");
 
 		String searchWhere = String.Empty;
 		String frText = String.Empty;
-		if (_descr.HasSearch())
+		if (uiForm.HasSearch())
 		{
-			var searchFields = _descr.Table.Fields.Where(f => f.Search)
-				.Select(f => $"{alias}.{f.Name.Escape()} like @fr");
+			// TODO: like or exact
+			var searchFields = uiForm.Fields.Where(f => f.IsSearch)
+				.Select(f => _descr.FindField(f.Field).LikeDeclaration(f, alias));
 			searchWhere = $" and (@fr is null or {String.Join( " or ", searchFields)})";
 			frText = "\n\n\tdeclare @fr nvarchar(255);\n\tset @fr = N'%' + @Fragment + N'%'";
 		}
@@ -115,8 +115,8 @@ internal class EndpointGenerator
 			@Id {iderType} = null,
 			@Offset int = 0,
 			@PageSize int = 20, -- TODO: PageSize?
-			@Order nvarchar(255) = N'{sortDescr.Field}',
-			@Dir nvarchar(4) = N'{sortDescr.Direction}'{(_descr.HasSearch() ? ",\n@Fragment nvarchar(255) = null": "")}
+			@Order nvarchar(255) = N'{sortDescr.OrderBy}',
+			@Dir nvarchar(4) = N'{sortDescr.Direction}'{(uiForm.HasSearch() ? ",\n@Fragment nvarchar(255) = null": "")}
 			as
 			begin
 				set nocount on;
@@ -132,7 +132,7 @@ internal class EndpointGenerator
 					count(*) over()
 				from {_descr.SqlTableName()} {alias}
 				where {TenantWhere()}{alias}.{voidName} = 0{searchWhere}
-				order by {GenerateOrderByIndex(alias)}
+				order by {GenerateOrderByIndex(_descr, uiForm, alias)}
 				offset @Offset rows fetch next @PageSize rows only
 				option (recompile);
 
@@ -173,9 +173,9 @@ internal class EndpointGenerator
 			.Select(f => f.FieldNameForSelect(alias)).Union(details);
 		var hasRefs = _descr.Table.Fields.Any(f => f.IsReference);
 
-		var mapFields = _descr.Table.Fields.Where(f => f.PrimaryKey || f.IsReference)
+		var mapFields = _descr.Table.Fields.Where(f => f.IsPrimaryKey || f.IsReference)
 			.Select(f => f.Name.Escape());
-		var mapFieldsAlias = _descr.Table.Fields.Where(f => f.PrimaryKey || f.IsReference)
+		var mapFieldsAlias = _descr.Table.Fields.Where(f => f.IsPrimaryKey || f.IsReference)
 			.Select(f => $"{alias}.{f.Name.Escape()}");
 
 		var pkName = _descr.PrimaryKeyName();
@@ -271,7 +271,7 @@ internal class EndpointGenerator
 		var procName = _descr.UpdateProcName();
 		var elem = _descr.Table.Name;
 		var iderType = _root.IdentifierType.SqlType();
-		var fields = _descr.Table.Fields.Where(f => !f.PrimaryKey && !f.IsVoid);
+		var fields = _descr.Table.Fields.Where(f => !f.IsPrimaryKey && !f.IsVoid);
 		var updateFields = fields.Select(f => $"t.{f.Name.Escape()} = s.{f.Name.Escape()}");
 		var insertFieldsSource = fields.Select(f => $"{f.Name.Escape()}");
 		var insertFieldsTarget = fields.Select(f => $"s.{f.Name.Escape()}");
@@ -326,7 +326,7 @@ internal class EndpointGenerator
 	{
 		var sb = new StringBuilder();
 
-		var mapFields = _descr.Table.Fields.Where(f => f.PrimaryKey || f.IsReference)
+		var mapFields = _descr.Table.Fields.Where(f => f.IsPrimaryKey || f.IsReference)
 			.Select(f => $"{f.Name.Escape()} {f.SqlType(_root.IdentifierType)}");
 		String start = $"""
 			{MsSqlServerSqlGenerator.DIVIDER}
@@ -383,7 +383,9 @@ internal class EndpointGenerator
 		String fileName = $"{_descr.Table.Name!.ToLowerInvariant()}.model.sql";
 		var sb = new StringBuilder();
 		sb.AppendLine(GenerateIndexMap());
-		sb.AppendLine(GenerateIndex());
+		var ix = _descr.Table.Ui?.Index;
+		if (ix != null)
+			sb.AppendLine(GenerateIndex(ix));
 		sb.AppendLine(GenerateLoad());
 		sb.AppendLine(GenerateDrop());
 		sb.AppendLine(GenerateCreateType());

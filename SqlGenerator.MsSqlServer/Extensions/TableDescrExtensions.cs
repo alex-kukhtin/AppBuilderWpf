@@ -55,7 +55,7 @@ internal static class TableExtensions
 
 	public static String PrimaryKeyName(this TableDescriptor descr)
 	{
-		return descr.Table.Fields.FirstOrDefault(f => f.PrimaryKey)?.Name?.Escape()
+		return descr.Table.Fields.FirstOrDefault(f => f.IsPrimaryKey)?.Name?.Escape()
 			?? throw new InvalidOperationException($"There is no primary key in {descr.Table.Name}");
 	}
 	public static String NameFieldName(this TableDescriptor descr)
@@ -73,20 +73,25 @@ internal static class TableExtensions
 	{
 		return descr.Table.Fields.Any(f => f.IsReference);
 	}
-	public static Boolean HasSearch(this TableDescriptor descr)
+	public static Boolean HasSearch(this UIElemForm descr)
 	{
-		return descr.Table.Fields.Any(f => f.Search);
+		return descr.Fields.Any(f => f.Search != SearchType.None);
 	}
 
-	public static SortDescription RealSort(this TableDescriptor descr)
+	public static SortDescription RealSort(this UIElemForm descr)
 	{
-		var table = descr.Table;
-		var sd = new SortDescription()
+		return new SortDescription()
 		{
-			Dir = table.InitialSort?.Dir ?? SortDirection.Asc,
-			Field = (table.InitialSort?.Field
-				?? table.Fields.FirstOrDefault(x => x.IsName)?.Name ?? String.Empty).ToLowerInvariant()
+			Dir = descr.InitialOrder?.Dir ?? SortDirection.Asc,
+			OrderBy = (descr.InitialOrder?.OrderBy ?? String.Empty).ToLowerInvariant()
 		};
-		return sd;
+	}
+
+	internal static FieldElem FindField(this TableDescriptor descr, String? name)
+	{
+		if (String.IsNullOrEmpty(name))
+			throw new ArgumentException("name is empty");
+		return descr.Table.Fields.FirstOrDefault(f => f.Name == name)
+			?? throw new InvalidOperationException("Name field not found");
 	}
 }
