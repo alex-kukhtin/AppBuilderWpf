@@ -1,0 +1,6 @@
+﻿<!--GENERATED -->
+<!--Catalog.Product Browse -->
+<Partial xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<Code Content="{Bind Product}" Multiline="True"></Code>
+</Partial>
+

@@ -2,7 +2,7 @@
 <!--$(SchemaName).$(ModelName) Index -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
 	<Page.CollectionView>
-		<CollectionView ItemsSource="{Bind $(CollectionName)}" RunAt="ServerUrl">
+		<CollectionView ItemsSource="{Bind $(CollectionName)}" RunAt="Server">
 			<CollectionView.Filter>
 				<FilterDescription>
 					<FilterItem Property="Fragment" DataType="String"/>
@@ -18,7 +18,7 @@
 				Command="{BindCmd OpenSelected, Argument={Bind $(CollectionName)}, Url='$(EditUrl)'}"/>
 			<Button Icon="Reload" Command="{BindCmd Reload}"/>
 		</Toolbar>
-		<DataGrid Grid.Row="2"  ItemsSource="{Bind Parent.ItemsSource}" FixedHeader="True"
+		<DataGrid Grid.Row="2"  ItemsSource="{Bind Parent.ItemsSource}" FixedHeader="True" Sort="True"
 				  DoubleClick="{BindCmd OpenSelected, Argument={Bind $(CollectionName)}, Url='$(EditUrl)'}">
 $(Columns)
 			<DataGridColumn Fit="True" Wrap="NoWrap">

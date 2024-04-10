@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -101,7 +102,6 @@ internal class EndpointGenerator
 		String frText = String.Empty;
 		if (uiForm.HasSearch())
 		{
-			// TODO: like or exact
 			var searchFields = uiForm.Fields.Where(f => f.IsSearch)
 				.Select(f => _descr.FindField(f.Field).LikeDeclaration(f, alias));
 			searchWhere = $" and (@fr is null or {String.Join( " or ", searchFields)})";

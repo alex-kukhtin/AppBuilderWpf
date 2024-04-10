@@ -4,6 +4,7 @@
 	<Page.Toolbar>
 		<Toolbar>
 			<Button Icon="Save" Command="{BindCmd Save}"/>
+			<Button Icon="Close" Command="{BindCmd Close}"/>
 		</Toolbar>
 	</Page.Toolbar>
 		<Grid>

@@ -25,6 +25,92 @@ begin
 end
 go
 ------------------------------------------------
+create or alter procedure doc.[Document.Index]
+@UserId bigint,
+@Id bigint = null,
+@Offset int = 0,
+@PageSize int = 20, -- TODO: PageSize?
+@Order nvarchar(255) = N'date',
+@Dir nvarchar(4) = N'asc',
+@Fragment nvarchar(255) = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	
+	set @Order = lower(@Order);
+	set @Dir = lower(@Dir);
+
+	declare @fr nvarchar(255);
+	set @fr = N'%' + @Fragment + N'%'
+
+	declare @tmp doc.[Document.Map.TableType]; 
+	
+	insert into @tmp(Id, Agent, _rowcnt)
+	select d.Id, d.Agent,
+		count(*) over()
+	from doc.[Documents] d
+	where d.Void = 0 and (@fr is null or d.Id = @Fragment or d.[No] like @fr or d.Memo like @fr)
+	order by 
+		case when @Dir = N'asc' then
+			case @Order
+				when N'id' then d.Id
+			end
+		end asc,
+		case when @Dir = N'desc' then
+			case @Order
+				when N'id' then d.Id
+			end
+		end desc,
+		case when @Dir = N'asc' then
+			case @Order
+				when N'date' then d.[Date]
+			end
+		end asc,
+		case when @Dir = N'desc' then
+			case @Order
+				when N'date' then d.[Date]
+			end
+		end desc,
+		case when @Dir = N'asc' then
+			case @Order
+				when N'no' then d.[No]
+				when N'memo' then d.Memo
+			end
+		end asc,
+		case when @Dir = N'desc' then
+			case @Order
+				when N'no' then d.[No]
+				when N'memo' then d.Memo
+			end
+		end desc,
+		case when @Dir = N'asc' then
+			case @Order
+				when N'sum' then d.[Sum]
+			end
+		end asc,
+		case when @Dir = N'desc' then
+			case @Order
+				when N'sum' then d.[Sum]
+			end
+		end desc,
+		d.Id
+	offset @Offset rows fetch next @PageSize rows only
+	option (recompile);
+
+	select [Documents!TDocument!Array] = null,
+		[Id!!Id] = d.Id, d.[Date], d.[No], d.[Sum], [Agent!TAgent!RefId] = d.Agent, d.Memo,
+		[!!RowCount] = _t._rowcnt			
+	from @tmp _t inner join doc.[Documents] d on _t.Id = d.Id
+	order by _t._rowno;
+
+	exec doc.[Document.Map] @UserId = @UserId, @Map = @tmp;
+
+	select [!$System!] = null, [!Documents!Offset] = @Offset, [!Documents!PageSize] = @PageSize, 
+		[!Documents!SortOrder] = @Order, [!Documents!SortDir] = @Dir;
+end
+go
+------------------------------------------------
 create or alter procedure doc.[Document.Load]
 @UserId bigint,
 @Id bigint = null

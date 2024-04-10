@@ -254,7 +254,61 @@
 						}
 					]
 				}
-			]
+			],
+			"ui": {
+				"index": {
+					"view": "page",
+					"initialOrder": {
+						"orderBy": "Date",
+						"dir": "asc"
+					},
+					"fields": [
+						{
+							"field": "Id",
+							"sort": true,
+							"search": "exact"
+						},
+						{
+							"field": "Date",
+							"sort": true
+						},
+						{
+							"field": "No",
+							"sort": true,
+							"search": "like"
+						},
+						{
+							"field": "Sum",
+							"sort": true
+						},
+						{ "field": "Agent" },
+						{
+							"field": "Memo",
+							"sort": "true",
+							"search": "like"
+						}
+					]
+				},
+				"editItem": {
+					"view": "dialog",
+					"fields": [
+						{
+							"field": "Name",
+							"tabIndex": 1,
+							"required": true
+						},
+						{
+							"field": "SKU",
+							"required": true
+						},
+						{ "field": "Unit" },
+						{
+							"field": "Memo",
+							"multiline": true
+						}
+					]
+				}
+			}
 		}
 	]
 }

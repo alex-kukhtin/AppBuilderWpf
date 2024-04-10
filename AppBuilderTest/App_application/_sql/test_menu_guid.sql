@@ -99,6 +99,8 @@ begin
 		(N'62E32954-060A-4959-9C23-8BEB600BADEC',  null,  0, N'Main',         null,         null, null),
 		(N'DB40EF2E-1E11-421B-B1D5-36FAF4ADEB37', N'62E32954-060A-4959-9C23-8BEB600BADEC',  400, N'@[Sales]',         N'sales',       N'shopping', N'border-top'),
 		(N'06997972-6AEA-4114-9E1E-A1537A70CD4F', N'62E32954-060A-4959-9C23-8BEB600BADEC',  500, N'@[Purchases]',     N'purchase',    N'cart', null),
+		(N'537CEFA3-61B2-4844-B091-18CBF1CF8DC1', N'62E32954-060A-4959-9C23-8BEB600BADEC',  600, null, null,  null,   N'grow'),
+		(N'7DE5512E-3DF8-4822-AB34-F06744D1A305', N'62E32954-060A-4959-9C23-8BEB600BADEC',  700, N'@[Settings]',      N'settings',    N'gear-outline', null),
 		-- Sales
 		(N'43897DEF-59FF-41C1-B93A-A6D183E1ED7A', N'DB40EF2E-1E11-421B-B1D5-36FAF4ADEB37', 11, N'@[Documents]',      null,  null, null),
 		(N'36FE4813-1F57-474A-B97E-F716EDC1CDA1', N'43897DEF-59FF-41C1-B93A-A6D183E1ED7A', 2,  N'@[Orders]',         N'/document/document/index/0',     N'file', null),

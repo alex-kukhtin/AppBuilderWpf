@@ -136,7 +136,10 @@
 				<TabItem DataContext="{Binding Ui.Index}" Header="Index">
 					<local:UiElementPanel />
 				</TabItem>
-				<TabItem DataContext="{Binding Ui.EditItem}" Header="EditItem">
+				<TabItem DataContext="{Binding Ui.BrowseItem}" Header="Browse">
+					<local:UiElementPanel />
+				</TabItem>
+				<TabItem DataContext="{Binding Ui.EditItem}" Header="Edit Item">
 					<local:UiElementPanel />
 				</TabItem>
 			</TabControl>

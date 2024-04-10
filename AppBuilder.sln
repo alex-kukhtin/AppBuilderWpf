@@ -18,7 +18,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGenerator", "TestGenera
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppGeneratorTests", "AppGeneratorTests\AppGeneratorTests.csproj", "{4EF07132-0466-432C-9434-E35AD0CEA0CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlGenerator.MsSqlServer", "SqlGenerator.MsSqlServer\SqlGenerator.MsSqlServer.csproj", "{394DB4B0-401D-4DDB-9C8C-9256B579E87E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlGenerator.MsSqlServer", "SqlGenerator.MsSqlServer\SqlGenerator.MsSqlServer.csproj", "{394DB4B0-401D-4DDB-9C8C-9256B579E87E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppBuilderTest", "AppBuilderTest\AppBuilderTest.csproj", "{AFE5C302-A400-4AF7-B282-335080C08EA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{394DB4B0-401D-4DDB-9C8C-9256B579E87E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{394DB4B0-401D-4DDB-9C8C-9256B579E87E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{394DB4B0-401D-4DDB-9C8C-9256B579E87E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFE5C302-A400-4AF7-B282-335080C08EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFE5C302-A400-4AF7-B282-335080C08EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFE5C302-A400-4AF7-B282-335080C08EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFE5C302-A400-4AF7-B282-335080C08EA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

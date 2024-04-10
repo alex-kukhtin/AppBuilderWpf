@@ -63,15 +63,20 @@ public class UiNode : ObservableNode
 	[JsonProperty(Order = 5)]
 	public UiElementNode? Index { get => _index; set { _index = value; OnPropertyChanged(); } }
 
-	UiElementNode? _editItem;
+	UiElementNode? _browseItem;
 	[JsonProperty(Order = 6)]
+	public UiElementNode? BrowseItem { get => _browseItem; set { _browseItem = value; OnPropertyChanged(); } }
+
+	UiElementNode? _editItem;
+	[JsonProperty(Order = 7)]
 	public UiElementNode? EditItem { get => _editItem; set { _editItem = value; OnPropertyChanged(); } }
 
 	UiElementNode? _editFolder;
-	[JsonProperty(Order = 6)]
+	[JsonProperty(Order = 8)]
 	public UiElementNode? EditFolder { get => _editFolder; set { _editFolder = value; OnPropertyChanged(); } }
 
-	[JsonIgnore] public Boolean IsEmpty => _index == null && _editItem == null && _editFolder == null;
+	[JsonIgnore] 
+	public Boolean IsEmpty => _index == null && _editItem == null && _editFolder == null && _browseItem == null;
 
 	internal void SetParent(TableNode parent)
 	{

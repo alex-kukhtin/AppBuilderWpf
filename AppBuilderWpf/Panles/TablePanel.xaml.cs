@@ -29,17 +29,13 @@ public partial class TablePanel : UserControl
 
 	private void DeleteField_Click(object sender, RoutedEventArgs e)
 	{
-		if (e.Source is not Button btnObj)
-			return;
-		if (btnObj.CommandParameter is not FieldNode fn)
+		if (e.Source is not Button btnObj || btnObj.CommandParameter is not FieldNode fn)
 			return;
 		_table.Fields.Remove(fn);
 	}
 	private void FieldUp_Click(object sender, RoutedEventArgs e)
 	{
-		if (e.Source is not Button btnObj)
-			return;
-		if (btnObj.CommandParameter is not FieldNode fn)
+		if (e.Source is not Button btnObj || btnObj.CommandParameter is not FieldNode fn)
 			return;
 		int pos = _table.Fields.IndexOf(fn);
 		if (pos < 1) 
@@ -49,9 +45,7 @@ public partial class TablePanel : UserControl
 
 	private void FieldDown_Click(object sender, RoutedEventArgs e)
 	{
-		if (e.Source is not Button btnObj)
-			return;
-		if (btnObj.CommandParameter is not FieldNode fn)
+		if (e.Source is not Button btnObj || btnObj.CommandParameter is not FieldNode fn)
 			return;
 		int pos = _table.Fields.IndexOf(fn);
 		if (pos >= _table.Fields.Count - 1)

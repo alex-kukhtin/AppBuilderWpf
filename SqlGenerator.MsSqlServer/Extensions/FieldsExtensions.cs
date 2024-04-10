@@ -28,6 +28,7 @@ internal static class FieldsExtensions
 		{
 			"int" or "bigint" => "int",
 			"date" or "datetime" => "date",
+			"money" or "float" => "number",
 			_ => "string"
 		};
 	}

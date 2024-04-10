@@ -20,9 +20,7 @@ SQL builder
 	11. Default PageSize
 	12. Fetch
 	13. Словари локализации
-	15. 
 
-50. model.json -> Catalog->cat, Document->Doc
 51. Index.xaml -> Reload, Delete
 52. 
 
@@ -33,3 +31,6 @@ Table Panel
 69. ShouldSerialize (Required, Default)
 70. Default -> Enabled/Disabled for (Required, Default)
 71. 
+
+
+Xaml.Index => Sort для DataGrid
